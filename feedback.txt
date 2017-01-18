@@ -1,1 +1,10 @@
 Lab1 Feedback:
+
+100
+
+git is whining about not knowing who you are. Follow the directions it gives you to correct this.
+
+Your git repository contains object files and an executable. It should only have source.
+
+Nice job commenting the code snippets that don't return.
+
