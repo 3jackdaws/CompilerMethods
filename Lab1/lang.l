@@ -11,6 +11,22 @@
 //
 
 #include "tokens.h"
+#include "lex.h"
+#include "cSymbolTable.h"
+#include <iostream>
+extern cSymbolTable g_SymbolTable;
+
+void IncreaseScope(){
+    g_SymbolTable.IncreaseScope();
+}
+
+void DecreaseScope(){
+    g_SymbolTable.DecreaseScope();
+}
+
+cSymbol * Insert(char * identifier){
+    return g_SymbolTable.Insert(identifier);
+}
 
 #define DO_RETURN(a) return (a)
 //#define DO_RETURN(a) return Return(a)
@@ -26,6 +42,8 @@ int Return(int val);
 
     /* definitions go here. period is an example. */
 period          ['.']
+identifier      [a-zA-Z_][a-zA-Z0-9_]?+
+whitespace      [\n\t ]
 
 %%
 
@@ -33,17 +51,29 @@ period          ['.']
 
 [/]{2}.*                    {   /*pass*/   }
 
-
+{whitespace}+               { /* pass */ }
 "if"                        DO_RETURN(IF);
 "."                         DO_RETURN('.');
 "("                         DO_RETURN('(');
 ")"                         DO_RETURN(')');
-"{"                         DO_RETURN('{');
-"}"                         DO_RETURN('}');
+
 "["                         DO_RETURN('[');
 "]"                         DO_RETURN(']');
 ","                         DO_RETURN(',');
 ";"                         DO_RETURN(';');
+
+"{"                         {
+                                IncreaseScope();
+                                return yytext[0];
+                            }
+"}"                         {
+                                DecreaseScope();
+                                return yytext[0];
+                            }
+{identifier}                {
+                                yylval.symbol = Insert(yytext);
+                                return IDENTIFIER;
+                            }
 
 "array"                     DO_RETURN(ARRAY);
 "else"                      DO_RETURN(ELSE);
@@ -57,7 +87,7 @@ period          ['.']
 [0-9]+[.][0-9]+             DO_RETURN(FLOAT_VAL);
 [0-9]+                      DO_RETURN(INT_VAL);
 
-[a-zA-Z_][a-zA-Z0-9_]?+     DO_RETURN(IDENTIFIER);
+
 
 "=="                        DO_RETURN(EQUALS);
 "&&"                        DO_RETURN(AND);

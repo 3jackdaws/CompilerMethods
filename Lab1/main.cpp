@@ -22,6 +22,8 @@
 // if we had a cSymbolTable.cpp, this definition could go there
 cSymbolTable g_SymbolTable;
 
+
+
 // If we had a cSymbol.cpp, this definition would go there
 long long cSymbol::nextId = 0;
 
@@ -63,16 +65,18 @@ int main(int argc, char **argv)
         exit(-1);
     }
     std::cout.rdbuf(output.rdbuf());
-
+    output << "<?xml version=\"1.0\"?>" << std::endl;
     output << "<program>\n";
-
+    
     token = yylex();
+    
     while (token != 0)
     {
         // std::cout << token << ":" << yytext << "\n";
         // if we found an identifier, print it out
         if (token == IDENTIFIER) std::cout << yylval.symbol->ToString() << "\n";
         token = yylex();
+        // std::cout << token << std::endl;
     }
 
     output << "</program>\n";

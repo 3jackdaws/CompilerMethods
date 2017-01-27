@@ -23,7 +23,7 @@ class cSymbol
         // Return value is an XML node
         string ToString()
         {
-            string result("<sym id=\"");
+            string result("  <sym id=\"");
             result += std::to_string(m_id);
             result += "\" name=\"" + m_name + "\" />";
 
