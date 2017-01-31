@@ -28,23 +28,41 @@ class cSymbolTable{
             m_stack.pop_front();
         };
         
-        cSymbol * Insert(char * identifier){
+        cSymbol * Insert(string identifier){
             // std::cout << "Inserting Identifier" << std::endl;
             cSymbol * symbol = NULL;
-            string identifier_string(identifier);
             
-            auto search = CURRENT_SCOPE->find(identifier_string);
+            
+            auto search = CURRENT_SCOPE->find(identifier);
             
             if(search == CURRENT_SCOPE->end()){
                 
-                symbol = new cSymbol(identifier_string);
-                CURRENT_SCOPE->insert({identifier_string, symbol});
+                symbol = new cSymbol(identifier);
+                CURRENT_SCOPE->insert({identifier, symbol});
                 
             }else{
                 symbol = search->second;
             }
             return symbol;
         };
+        
+        cSymbol * Lookup(string key){
+            auto search = CURRENT_SCOPE->find(key);
+            if (search != CURRENT_SCOPE->end()){
+                return search->second;
+            }
+            return nullptr;
+        }
+        
+        cSymbol * LookupAll(string key){
+            for (auto scope : m_stack){
+                auto search = scope->find(key);
+                if (search != scope->end()){
+                    return search->second;
+                }
+            }
+            return nullptr;
+        }
         
     private:
         

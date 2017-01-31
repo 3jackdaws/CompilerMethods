@@ -31,6 +31,9 @@ clean:
 
 main.o: main.cpp langlex.c 
 	g++ $(COPTS) main.cpp -o main.o
+	
+test.o: test.cpp langlex.c 
+	g++ $(COPTS) test.cpp -o test.o
 
 langlex.c: lang.l
 	flex  -o langlex.c lang.l
@@ -40,4 +43,7 @@ langlex.o: langlex.c
 
 lang: $(OBJS)
 	g++ $(OBJS) -o lang
+	
+test: test.o langlex.o
+	g++ test.o langlex.o -o test_exec
 
