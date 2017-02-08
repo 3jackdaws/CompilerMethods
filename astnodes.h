@@ -16,6 +16,9 @@
 #include "cBlockNode.h"
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
+#include "cVarDeclNode.h"
+
+
 #include "cOpNode.h"
 #include "cStmtNode.h"
 #include "cStmtsNode.h"

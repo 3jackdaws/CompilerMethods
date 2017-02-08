@@ -31,6 +31,7 @@
     cSymbolTable::symbolTable_t*  sym_table;
     cDeclNode*      decl_node;
     cDeclsNode*     decls_node;
+    cVarDeclNode*   var_decl_node;
     //cMathNode*      math_node;
     }
 
@@ -68,7 +69,7 @@
 %type <sym_table> close
 %type <decls_node> decls
 %type <decl_node> decl
-%type <decl_node> var_decl
+%type <var_decl_node> var_decl
 %type <decl_node> struct_decl
 %type <decl_node> array_decl
 %type <ast_node> func_decl
@@ -109,15 +110,15 @@ close:  '}'                     { g_SymbolTable.DecreaseScope();
                                   $$ = nullptr; // probably want to change this
                                 }
 
-decls:      decls decl          { $$ = new cDeclsNode($2); }
-        |   decl                {  }
-decl:       var_decl ';'        { $$ = $1; }
+decls:      decls decl          { $$->Insert($2); }
+        |   decl                { $$=new cDeclsNode($1); }
+decl:       var_decl ';'        { $$=$1; }
         |   struct_decl ';'     {}
         |   array_decl ';'      {}
         |   func_decl           {}
         |   error ';'           {}
 
-var_decl:   TYPE_ID IDENTIFIER  {}
+var_decl:   TYPE_ID IDENTIFIER  { $$ = new cVarDeclNode($1, $2); }
 struct_decl:  STRUCT open decls close IDENTIFIER    
                                 {}
 array_decl: ARRAY TYPE_ID '[' INT_VAL ']' IDENTIFIER
