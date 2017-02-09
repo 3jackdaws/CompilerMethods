@@ -32,6 +32,7 @@
     cDeclNode*      decl_node;
     cDeclsNode*     decls_node;
     cVarDeclNode*   var_decl_node;
+    cVarExprNode*   var_expr_node;
     //cMathNode*      math_node;
     }
 
@@ -55,6 +56,7 @@
 %token <int_val>   SUB
 %token <int_val>   DIV
 %token <int_val>   MULT
+%token <int_val>   MOD
 
 %token  PRINT
 %token  WHILE IF ELSE ENDIF
@@ -81,13 +83,14 @@
 %type <stmts_node> stmts
 %type <stmt_node> stmt
 %type <ast_node> lval
+
 %type <ast_node> params
 %type <ast_node> param
 %type <expr_node> expr
 %type <expr_node> addit
 %type <expr_node> term
 %type <expr_node> fact
-%type <ast_node> varref
+%type <symbol> varref
 %type <ast_node> varpart
 
 %%
@@ -145,18 +148,18 @@ stmts:      stmts stmt          { $$->Insert($2); }
         |   stmt                { $$ = new cStmtsNode($1); }
 
 stmt:       IF '(' expr ')' stmts ENDIF ';'
-                                {}
+                                { $$=new cIfNode($3, $5, nullptr); }
         |   IF '(' expr ')' stmts ELSE stmts ENDIF ';'
-                                {}
+                                { $$=new cIfNode($3, $5, $7); }
         |   WHILE '(' expr ')' stmt 
-                                {}
+                                { $$=new cWhileNode($3, $5); }
         |   PRINT '(' expr ')' ';'
                                 { $$ = new cPrintNode($3); }
         |   lval '=' expr ';'   {}
         |   lval '=' func_call ';'   {}
         |   func_call ';'       {}
         |   block               {}
-        |   RETURN expr ';'     {}
+        |   RETURN expr ';'     { $$ = new cReturnNode($2); }
         |   error ';'           {}
 
 func_call:  IDENTIFIER '(' params ')' {}
@@ -184,13 +187,13 @@ addit:      addit '+' term      { $$ = new cMathNode($$, new cOpNode(ADD), $3); 
 
 term:       term '*' fact       { $$ = new cMathNode($$, new cOpNode(MULT), $3); }
         |   term '/' fact       { $$ = new cMathNode($$, new cOpNode(DIV), $3); }
-        |   term '%' fact       {}
+        |   term '%' fact       { $$ = new cMathNode($$, new cOpNode(MOD), $3); }
         |   fact                { $$ = $1; }
 
-fact:        '(' expr ')'       {}
+fact:        '(' expr ')'       { $$ = $2; }
         |   INT_VAL             { $$ = new cIntExprNode($1); }
         |   FLOAT_VAL           { $$ = new cFloatExprNode($1); }
-        |   varref              {}
+        |   varref              { $$ = new cVarExprNode($1); }
 
 %%
 

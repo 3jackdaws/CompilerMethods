@@ -26,6 +26,9 @@ long long cSymbol::nextId;
 int main(int argc, char **argv)
 {
     std::cout << "Ian Murphy" << std::endl;
+    g_SymbolTable.Insert(new cSymbol("char"));
+    g_SymbolTable.Insert(new cSymbol("int"));
+    g_SymbolTable.Insert(new cSymbol("float"));
 
     const char *outfile_name;
     int result = 0;

@@ -17,4 +17,13 @@ class cDeclNode : public cAstNode
 {
     public:
         cDeclNode() : cAstNode() {}
+        
+        // Add a decl to the list
+        void Insert(cDeclNode *decl)
+        {
+            AddChild(decl);
+        }
+
+        virtual string NodeType() { return string("decls"); }
+        virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

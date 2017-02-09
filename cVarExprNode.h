@@ -16,22 +16,15 @@
 #include "cAstNode.h"
 #include "cExprNode.h"
 
-class cIntExprNode : public cExprNode
+class cVarExprNode : public cExprNode
 {
     public:
         // param is the value of the integer constant
-        cIntExprNode(int value) : cExprNode()
+        cVarExprNode(cSymbol * var) : cExprNode()
         {
-            print("INTEXPR");
-            m_value = value;
+            AddChild(var);
         }
 
-        virtual string AttributesToString() 
-        {
-            return " value=\"" + std::to_string(m_value) + "\"";
-        }
-        virtual string NodeType() { return string("int"); }
+        virtual string NodeType() { return string("varref"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        int m_value;        // value of integer constant (literal)
 };

@@ -23,7 +23,7 @@ class cSymbol : public cAstNode
         // param is name of symbol
         cSymbol(string name) : cAstNode()
         {
-            print( name );
+            // print( name );
             m_id = ++nextId;        // get next available ID
             m_name = name;
         }

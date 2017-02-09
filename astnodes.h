@@ -17,6 +17,11 @@
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
 #include "cVarDeclNode.h"
+#include "cIfNode.h"
+#include "cWhileNode.h"
+
+#include "cReturnNode.h"
+#include "cVarExprNode.h"
 
 
 #include "cOpNode.h"

@@ -17,8 +17,6 @@ class cVarDeclNode : public cDeclNode
 {
     public:
         cVarDeclNode(cSymbol * type, cSymbol * name) : cDeclNode() {
-            // print( type->GetName() );
-            // print( name->GetName() );
             AddChild(type);
             AddChild(name);
         }
