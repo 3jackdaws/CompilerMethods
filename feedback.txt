@@ -1,3 +1,22 @@
+Lab 3 Feedback
+
+59
+
+-20 LATE
+
+-5 Your git repository has extra files AND the important files were in a subdirectory. The git repository you supply to me must be the actual working directory.
+
+-10 Your build has warnings
+
+-5 Your code does not have ANY useful comments. The only comments were commented out debug code. You must document your code.
+
+-1 DecreaseScope should make sure the list isn't empty prior to the pop
+
+The use of CURRENT_SCOPE macro does not improve the readability of your code. Since you're writing C++ code, you should do this with an inline function instead of a macro.
+
+
+*****************************************
+
 Lab1 Feedback:
 
 100
