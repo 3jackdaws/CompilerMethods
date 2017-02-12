@@ -15,14 +15,14 @@
 
 #include "cStmtNode.h"
 
-class cWhileNode : public cStmtNode
+class cAssignNode : public cStmtNode
 {
     public:
-        cWhileNode(cExprNode * expr, cStmtNode * stmt) : cStmtNode() 
+        cAssignNode(cAstNode * varexpr, cAstNode * expr) : cStmtNode() 
         {
-            // print( " WHILE NODE " );
-            AddChild((cAstNode *)expr);
-            AddChild(stmt);
+            
+            AddChild(varexpr);
+            AddChild(expr);
         }
         
         virtual string AttributesToString() 
@@ -30,7 +30,7 @@ class cWhileNode : public cStmtNode
             return "";
         }
         
-        virtual string NodeType() { return string("while"); }
+        virtual string NodeType() { return string("assign"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:
         float m_value;        // value of integer constant (literal)

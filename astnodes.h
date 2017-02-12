@@ -22,7 +22,14 @@
 
 #include "cReturnNode.h"
 #include "cVarExprNode.h"
-
+#include "cAssignNode.h"
+#include "cMathNode.h"
+#include "cStructDeclNode.h"
+#include "cParamListNode.h"
+#include "cFuncExprNode.h"
+#include "cParamsNode.h"
+#include "cArrayDeclNode.h"
+#include "cFuncDeclNode.h"
 
 #include "cOpNode.h"
 #include "cStmtNode.h"
@@ -31,5 +38,5 @@
 #include "cExprNode.h"
 #include "cIntExprNode.h"
 #include "cFloatExprNode.h"
-#include "cMathNode.h"
+
 

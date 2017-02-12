@@ -22,7 +22,7 @@ class cFloatExprNode : public cExprNode
         // param is the value of the integer constant
         cFloatExprNode(float value) : cExprNode()
         {
-            print(value);
+            // print(value);
             m_value = value;
         }
 

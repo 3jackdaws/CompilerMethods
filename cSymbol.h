@@ -21,11 +21,11 @@ class cSymbol : public cAstNode
 {
     public:
         // param is name of symbol
-        cSymbol(string name) : cAstNode()
+        cSymbol(string name, bool is_type = false) : cAstNode()
         {
-            // print( name );
             m_id = ++nextId;        // get next available ID
             m_name = name;
+            m_is_type = is_type;
         }
 
         // return name of symbol
@@ -38,10 +38,22 @@ class cSymbol : public cAstNode
             result += "\" name=\"" + m_name + "\"";
             return result;
         }
+        
+        bool IsType()
+        {
+            return m_is_type;
+        }
+        
+        void IsType(bool val)
+        {
+            m_is_type = val;
+        }
+        
         virtual string NodeType() { return string("sym"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:
         static long long nextId;        // Next avail symbol ID
         long long m_id;                 // Unique ID for this symbol
         string m_name;                  // name of symbol
+        bool m_is_type = false;
 };

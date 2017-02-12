@@ -11,6 +11,8 @@
 // Date: Jan. 26, 2016
 //
 
+// #define print(x) std::cout << x << std::endl;
+
 #include <string>
 #include <unordered_map>
 #include <list>
@@ -62,6 +64,8 @@ class cSymbolTable
         // Assumes the symbol is not already in the table
         void Insert(cSymbol *sym)
         {
+            // print("Insert")
+            // print(sym->ToString())
             pair<string, cSymbol*> new_val(sym->GetName(), sym);
             m_SymbolTable.front()->insert(new_val);
         }
@@ -78,7 +82,11 @@ class cSymbolTable
             while (it != m_SymbolTable.end())
             {
                 sym = FindInTable(*it, name);
-                if (sym != nullptr) return sym;
+                if (sym != nullptr){
+                    // print(sym->ToString())
+                    
+                    return sym;
+                } 
 
                 it++;
             }

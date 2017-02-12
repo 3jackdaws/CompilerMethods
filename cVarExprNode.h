@@ -20,7 +20,7 @@ class cVarExprNode : public cExprNode
 {
     public:
         // param is the value of the integer constant
-        cVarExprNode(cSymbol * var) : cExprNode()
+        cVarExprNode(cAstNode * var) : cExprNode()
         {
             AddChild(var);
         }

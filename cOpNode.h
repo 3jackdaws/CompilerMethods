@@ -42,13 +42,16 @@ class cOpNode : public cAstNode
                     result += "+";
                     break;
                 case SUB:
-                    result += "+";
+                    result += "-";
                     break;
                 case MULT:
-                    result += "+";
+                    result += "*";
                     break;
                 case DIV:
-                    result += "+";
+                    result += "/";
+                    break;
+                case MOD:
+                    result += "%";
                     break;
                 default:
                     result += (char)m_op;

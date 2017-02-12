@@ -22,7 +22,7 @@ class cIntExprNode : public cExprNode
         // param is the value of the integer constant
         cIntExprNode(int value) : cExprNode()
         {
-            print("INTEXPR");
+            // print("INTEXPR");
             m_value = value;
         }
 
