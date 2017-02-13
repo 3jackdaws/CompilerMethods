@@ -16,27 +16,32 @@
 #include "cBlockNode.h"
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
+
+#include "cStmtNode.h"
+#include "cStmtsNode.h"
+
+#include "cPrintNode.h"
+#include "cExprNode.h"
+#include "cIntExprNode.h"
+#include "cFloatExprNode.h"
+
 #include "cVarDeclNode.h"
 #include "cIfNode.h"
 #include "cWhileNode.h"
-
 #include "cReturnNode.h"
-#include "cVarExprNode.h"
 #include "cAssignNode.h"
-#include "cMathNode.h"
+#include "cVarExprNode.h"
+
 #include "cStructDeclNode.h"
 #include "cParamListNode.h"
+
 #include "cFuncExprNode.h"
 #include "cParamsNode.h"
 #include "cArrayDeclNode.h"
 #include "cFuncDeclNode.h"
 
 #include "cOpNode.h"
-#include "cStmtNode.h"
-#include "cStmtsNode.h"
-#include "cPrintNode.h"
-#include "cExprNode.h"
-#include "cIntExprNode.h"
-#include "cFloatExprNode.h"
+#include "cMathNode.h"
+
 
 

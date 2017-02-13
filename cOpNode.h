@@ -9,7 +9,7 @@
 //
 // Date: Jan. 18, 2016
 //
-
+#include "astnodes.h"
 #include "cAstNode.h"
 #include "langparse.h"
 

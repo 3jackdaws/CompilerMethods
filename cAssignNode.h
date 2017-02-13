@@ -20,18 +20,10 @@ class cAssignNode : public cStmtNode
     public:
         cAssignNode(cAstNode * varexpr, cAstNode * expr) : cStmtNode() 
         {
-            
             AddChild(varexpr);
             AddChild(expr);
         }
         
-        virtual string AttributesToString() 
-        {
-            return "";
-        }
-        
         virtual string NodeType() { return string("assign"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        float m_value;        // value of integer constant (literal)
 };

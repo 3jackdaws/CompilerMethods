@@ -25,11 +25,6 @@ class cParamListNode : public cStmtNode
             
         }
         
-        virtual string AttributesToString() 
-        {
-            return "";
-        }
-        
         virtual string NodeType() { return string("params"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:

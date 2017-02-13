@@ -19,10 +19,20 @@
 class cArrayDeclNode : public cDeclNode
 {
     public:
-        cArrayDeclNode(cSymbol * type, cSymbol * ident, int size):cDeclNode(){
+        cArrayDeclNode(cSymbol * type, cSymbol * name, int size):cDeclNode(){
+            
             AddChild(type);
-            AddChild(ident);
+            AddChild(name);
             m_size = size;
+        }
+        
+        void SetSize(int size){
+            m_size = size;
+        }
+        
+        int GetSize()
+        {
+            return m_size;
         }
         
         virtual string AttributesToString() 
