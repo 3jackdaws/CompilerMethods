@@ -27,5 +27,6 @@
 #define EQUALS 1015
 #define AND 1016
 #define OR 1017
+#define MULT 1018
 #define JUNK_TOKEN 2000
 

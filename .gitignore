@@ -32,6 +32,6 @@
 *.dSYM/
 *.su
 
-*/test/*
+test/*
 *.tar
 !.
