@@ -19,8 +19,6 @@ class cReturnNode : public cStmtNode
     public:
         cReturnNode(cExprNode * expr) : cStmtNode() 
         {
-            // print("RETURN");
-            // print(((cAstNode*)expr)->ToString());
             AddChild((cAstNode *)expr);
         }
         

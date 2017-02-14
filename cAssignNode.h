@@ -14,11 +14,12 @@
 //
 
 #include "cStmtNode.h"
+#include "cVarExprNode.h"
 
 class cAssignNode : public cStmtNode
 {
     public:
-        cAssignNode(cAstNode * varexpr, cAstNode * expr) : cStmtNode() 
+        cAssignNode(cVarExprNode * varexpr, cExprNode * expr) : cStmtNode() 
         {
             AddChild(varexpr);
             AddChild(expr);

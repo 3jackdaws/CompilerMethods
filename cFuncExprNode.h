@@ -13,25 +13,18 @@
 // Date: Jan. 18, 2015
 //
 
-#include "cStmtNode.h"
+#include "cExprNode.h"
 #include "cParamListNode.h"
 
-class cFuncExprNode : public cStmtNode
+class cFuncExprNode : public cExprNode
 {
     public:
-        cFuncExprNode(cSymbol * ident, cAstNode * params = nullptr) : cStmtNode() 
+        cFuncExprNode(cSymbol * ident, cParamListNode * params = nullptr) : cExprNode() 
         {
             AddChild(ident);
             AddChild(params);
         }
         
-        virtual string AttributesToString() 
-        {
-            return "";
-        }
-        
         virtual string NodeType() { return string("funcCall"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        float m_value;        // value of integer constant (literal)
 };

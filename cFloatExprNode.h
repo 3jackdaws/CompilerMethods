@@ -25,6 +25,11 @@ class cFloatExprNode : public cExprNode
             // print(value);
             m_value = value;
         }
+        
+        float GetValue()
+        {
+            return m_value;
+        }
 
         virtual string AttributesToString() 
         {

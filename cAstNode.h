@@ -92,6 +92,13 @@ class cAstNode
 
             return result;
         }
+        
+        void ClearChildNodes()
+        {
+            m_children.clear();
+        }
+        
+        
 
         virtual string AttributesToString()   { return string(""); }
         virtual string NodeType() = 0; //      { return "AST"; }

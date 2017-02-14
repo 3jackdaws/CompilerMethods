@@ -20,9 +20,14 @@ class cVarExprNode : public cExprNode
 {
     public:
         // param is the value of the integer constant
-        cVarExprNode(cAstNode * var) : cExprNode()
+        cVarExprNode(cSymbol * var) : cExprNode()
         {
             AddChild(var);
+        }
+        
+        void AddSymbol(cSymbol * name)
+        {
+            AddChild(name);
         }
 
         virtual string NodeType() { return string("varref"); }

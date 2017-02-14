@@ -167,16 +167,16 @@ func_decl:  func_header ';'
                                 {}
         |   func_header  '{' decls stmts '}'
                                 {
-                                    $$->AddChild($3);
-                                    $$->AddChild($4);
+                                    $$->AddDecls($3);
+                                    $$->AddStmts($4);
                                 }
         |   func_header  '{' stmts '}'
                                 {
-                                    $$->AddChild($3);
+                                    $$->AddStmts($3);
                                 }
 func_header: func_prefix paramsspec ')'
                                 {
-                                    $$->AddChild($2);
+                                    $$->AddParams($2);
                                 }
         |    func_prefix ')'    {}
 
@@ -197,7 +197,7 @@ paramsspec: paramsspec',' paramspec
 
 paramspec:  var_decl            {}
 
-stmts:      stmts stmt          {   $$->Insert($2); }
+stmts:      stmts stmt          {   $$->AddStmt($2); }
         |   stmt                {   $$ = new cStmtsNode($1); }
 
 stmt:       IF '(' expr ')' stmts ENDIF ';'
@@ -218,7 +218,7 @@ stmt:       IF '(' expr ')' stmts ENDIF ';'
 func_call:  IDENTIFIER '(' params ')' { $$ = new cFuncExprNode($1, $3); }
         |   IDENTIFIER '(' ')'  {   $$ = new cFuncExprNode($1); }
 
-varref:   varref '.' varpart    {   $$ = $1; $$->AddChild($3); }
+varref:   varref '.' varpart    {   $$ = $1; $$->AddSymbol($3); }
         | varref '[' expr ']'   {   $$ = $1; $$->AddChild($3); }
         | varpart               {   $$ = new cVarExprNode($1); }
 
@@ -226,20 +226,20 @@ varpart:  IDENTIFIER            {   $$ = $1; }
 
 lval:     varref                {   $$ = $1; }
 
-params:     params',' param     {   $$ = $1; $$->AddChild($3); }
+params:     params',' param     {   $$ = $1; $$->AddExpr($3); }
         |   param               {   $$ = new cParamListNode($1); }
 
 param:      expr                {}
 
-expr:       expr EQUALS addit   {   $$ = new cMathNode($$, new cOpNode(EQUALS), $3); }
+expr:       expr EQUALS addit   {   $$ = new cBinaryExprNode($$, new cOpNode(EQUALS), $3); }
         |   addit               {   $$ = $1; }
 
-addit:      addit '+' term      {   $$ = new cMathNode($$, new cOpNode(ADD), $3); }
-        |   addit '-' term      {   $$ = new cMathNode($$, new cOpNode(SUB), $3); }
+addit:      addit '+' term      {   $$ = new cBinaryExprNode($$, new cOpNode(ADD), $3); }
+        |   addit '-' term      {   $$ = new cBinaryExprNode($$, new cOpNode(SUB), $3); }
         |   term                {   $$ = $1; }
-term:       term '*' fact       {   $$ = new cMathNode($$, new cOpNode(MULT), $3); }
-        |   term '/' fact       {   $$ = new cMathNode($$, new cOpNode(DIV), $3); }
-        |   term '%' fact       {   $$ = new cMathNode($$, new cOpNode(MOD), $3); }
+term:       term '*' fact       {   $$ = new cBinaryExprNode($$, new cOpNode(MULT), $3); }
+        |   term '/' fact       {   $$ = new cBinaryExprNode($$, new cOpNode(DIV), $3); }
+        |   term '%' fact       {   $$ = new cBinaryExprNode($$, new cOpNode(MOD), $3); }
         |   fact                {   $$ = $1; }
 
 fact:        '(' expr ')'       {   $$ = $2; }

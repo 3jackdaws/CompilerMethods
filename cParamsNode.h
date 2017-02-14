@@ -22,7 +22,7 @@ class cParamsNode : public cAstNode
         }
         
         // Add a decl to the list
-        void Insert(cDeclNode *decl)
+        void AddDecl(cDeclNode *decl)
         {
             AddChild(decl);
         }

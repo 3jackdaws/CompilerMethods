@@ -20,18 +20,12 @@ class cWhileNode : public cStmtNode
     public:
         cWhileNode(cExprNode * expr, cStmtNode * stmt) : cStmtNode() 
         {
-            // print( " WHILE NODE " );
             AddChild((cAstNode *)expr);
             AddChild(stmt);
         }
-        
-        virtual string AttributesToString() 
-        {
-            return "";
-        }
+ 
         
         virtual string NodeType() { return string("while"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        float m_value;        // value of integer constant (literal)
+
 };

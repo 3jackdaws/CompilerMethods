@@ -20,15 +20,9 @@ class cIfNode : public cStmtNode
     public:
         cIfNode(cStmtNode * expr, cStmtsNode * nIf, cStmtsNode * nElse) : cStmtNode() 
         {
-            // print( " IF NODE " );
-            AddChild(static_cast<cAstNode *>(expr));
+            AddChild(expr);
             AddChild(nIf);
             AddChild(nElse);
-        }
-        
-        virtual string AttributesToString() 
-        {
-            return "";
         }
         
         virtual string NodeType() { return string("if"); }

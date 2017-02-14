@@ -20,13 +20,14 @@ class cParamListNode : public cStmtNode
     public:
         cParamListNode(cExprNode * expr) : cStmtNode() 
         {
-            // print( " IF NODE " );
             AddChild(expr);
-            
+        }
+        
+        void AddExpr(cExprNode * expr)
+        {
+            AddChild(expr);
         }
         
         virtual string NodeType() { return string("params"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        float m_value;        // value of integer constant (literal)
 };

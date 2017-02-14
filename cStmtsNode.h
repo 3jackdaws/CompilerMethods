@@ -23,7 +23,7 @@ class cStmtsNode : public cAstNode
         }
 
         // Add a statement to the list
-        void Insert(cStmtNode *stmt)
+        void AddStmt(cStmtNode *stmt)
         {
             AddChild(stmt);
         }

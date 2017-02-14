@@ -22,8 +22,12 @@ class cIntExprNode : public cExprNode
         // param is the value of the integer constant
         cIntExprNode(int value) : cExprNode()
         {
-            // print("INTEXPR");
             m_value = value;
+        }
+        
+        int GetValue()
+        {
+            return m_value;
         }
 
         virtual string AttributesToString() 

@@ -19,16 +19,12 @@ class cDeclsNode : public cAstNode
         // param is the first decl in this decls
         cDeclsNode(cDeclNode *decl) : cAstNode()
         {
-            // print( "First" );
-            // print( decl->ToString() );
             AddChild(decl);
         }
 
         // Add a decl to the list
         void Insert(cDeclNode *decl)
         {
-            // print( "Adding" )
-            // print( decl->ToString() );
             AddChild(decl);
         }
 
