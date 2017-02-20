@@ -1,6 +1,26 @@
+Lab 4 Feedback - Rescored
+
+127
+
+-2 cReturnNode::cReturnNode contained a type cast that was not necessary.
+
+-3 Some of your files had header comments indicating I was the author even though I did not write those source files. Some of them also had incorrect info.
+
+-3 The symbol table inserts should not be in lang.y. They should be in the constructor for the declaration. Keep as many implementation details out of lang.y as possible.
+
+-1 I don't see much value in defining constants such as SUB for '-'. The '-' is not a "magic number" in the normal sense, and its use is perfectly clear in this context. But if you ARE going to define the constant, be consistent and use it everywhere including lang.l
+
+-10 Many of your code snippets were blank. As a result, you were not explicitly controlling the construction of your AST. Your tests passed because you got lucky.
+
+-4 You never call cFuncDeclNode::cFuncDeclNode with more than two params, and the default values you gave to the others have no effect, so you might as well have just a two param constructor. Also, your implementation means it will be difficult to write getters for the various items. Where are the statements? in m_children[2], [3], or [4]?
+
+*****************************************
+
 Lab 3 Feedback
 
-59
+79
+
+UPDATE: added the 20 late points back based on git repo dates.
 
 -20 LATE
 
