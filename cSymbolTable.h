@@ -90,7 +90,6 @@ class cSymbolTable
 
                 it++;
             }
-
             return nullptr;
         }
 

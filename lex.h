@@ -21,3 +21,4 @@ extern int yylineno;                    // line number of input file
 extern int yynerrs;                     // Num of compile errors
 extern FILE *yyin;                      // FILE pointer for input
 extern cAstNode *yyast_root;            // root of AST
+extern void SemanticError(std::string error);

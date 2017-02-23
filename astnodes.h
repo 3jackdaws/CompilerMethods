@@ -11,6 +11,8 @@
 // Date: Jan. 18, 2015
 //
 
+void SemanticError(std::string error);
+
 #include "cAstNode.h"
 #include "cProgramNode.h"
 #include "cBlockNode.h"
@@ -39,9 +41,11 @@
 #include "cParamsNode.h"
 #include "cArrayDeclNode.h"
 #include "cFuncDeclNode.h"
+#include "cBaseTypeNode.h"
 
 #include "cOpNode.h"
 #include "cBinaryExprNode.h"
+
 
 
 

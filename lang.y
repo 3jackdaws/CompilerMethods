@@ -49,6 +49,8 @@
     int yyerror(const char *msg);
 
     cAstNode *yyast_root;
+    
+    void SemanticError(std::string error);
 %}
 
 %start  program
@@ -123,19 +125,17 @@ close:  '}'                     {   g_SymbolTable.DecreaseScope();
 
 decls:      decls decl          {   $$->AddChild($2); }
         |   decl                {   $$ = new cDeclsNode($1); }
-decl:       var_decl ';'        {}
-        |   struct_decl ';'     {}
-        |   array_decl ';'      {}
-        |   func_decl           {   g_SymbolTable.DecreaseScope(); }
+decl:       var_decl ';'        {$$ = $1;}
+        |   struct_decl ';'     {$$ = $1;}
+        |   array_decl ';'      {$$ = $1;}
+        |   func_decl           {   
+                                    $$ = $1; 
+                                    g_SymbolTable.DecreaseScope();
+                                }
         |   error ';'           {}
 
 var_decl:   TYPE_ID IDENTIFIER  {
-                                    string identifier = $2->GetName();
-                                    if (g_SymbolTable.Find(identifier))
-                                    {
-                                        $2 = new cSymbol(identifier);
-                                    }
-                                    g_SymbolTable.Insert($2);
+                                   
                                     $$ = new cVarDeclNode($1, $2);
                                 }
 
@@ -146,8 +146,7 @@ struct_decl:  STRUCT open decls close IDENTIFIER
                                     {
                                         $5 = new cSymbol(identifier);
                                     }
-                                    $5->IsType(true);
-                                    g_SymbolTable.Insert($5);
+                                    
                                     $$ = new cStructDeclNode($3, $5);
                                 }
 
@@ -158,44 +157,50 @@ array_decl: ARRAY TYPE_ID '[' INT_VAL ']' IDENTIFIER
                                     {
                                         $6 = new cSymbol(identifier);
                                     }
-                                    $6->IsType(true);
-                                    g_SymbolTable.Insert($6);
+                                    
                                     $$ = new cArrayDeclNode($2, $6, $4);
                                 }
 
 func_decl:  func_header ';'
-                                {}
+                                { $$ = $1; }
         |   func_header  '{' decls stmts '}'
                                 {
                                     $$->AddDecls($3);
                                     $$->AddStmts($4);
+                                    
                                 }
         |   func_header  '{' stmts '}'
                                 {
                                     $$->AddStmts($3);
+                                    
                                 }
 func_header: func_prefix paramsspec ')'
                                 {
                                     $$->AddParams($2);
+                                    
                                 }
-        |    func_prefix ')'    {}
+        |    func_prefix ')'    { $$ = $1; }
 
 func_prefix: TYPE_ID IDENTIFIER '('
                                 {
-                                    if (g_SymbolTable.Find($2->GetName()))
-                                        $2 = new cSymbol($2->GetName());
                                     
-                                    g_SymbolTable.Insert($2);
+                                   // if (g_SymbolTable.Find($2->GetName()))
+                                     //   $2 = new cSymbol($2->GetName());
                                     
-                                    $$ = new cFuncDeclNode($1, $2);
+                                    
+                                    $$ = cFuncDeclNode::Create($1, $2);
                                     
                                     g_SymbolTable.IncreaseScope();
+                                    
                                 }
 paramsspec: paramsspec',' paramspec 
-                                {   $$->AddChild($3); }
+                                {   
+                                    $$ = $1;
+                                    $$->AddChild($3); 
+                                }
         |   paramspec           {   $$ = new cParamsNode($1); }
 
-paramspec:  var_decl            {}
+paramspec:  var_decl            {  $$ = $1; }
 
 stmts:      stmts stmt          {   $$->AddStmt($2); }
         |   stmt                {   $$ = new cStmtsNode($1); }
@@ -210,8 +215,8 @@ stmt:       IF '(' expr ')' stmts ENDIF ';'
                                 {   $$ = new cPrintNode($3); }
         |   lval '=' expr ';'   {   $$ = new cAssignNode($1, $3); }
         |   lval '=' func_call ';'   { $$ = new cAssignNode($1, $3); }
-        |   func_call ';'       {}
-        |   block               {}
+        |   func_call ';'       {$$ = $1;}
+        |   block               {$$ = $1;}
         |   RETURN expr ';'     {   $$ = new cReturnNode($2); }
         |   error ';'           {}
 
@@ -229,7 +234,7 @@ lval:     varref                {   $$ = $1; }
 params:     params',' param     {   $$ = $1; $$->AddExpr($3); }
         |   param               {   $$ = new cParamListNode($1); }
 
-param:      expr                {}
+param:      expr                {  $$ = $1; }
 
 expr:       expr EQUALS addit   {   $$ = new cBinaryExprNode($$, new cOpNode(EQUALS), $3); }
         |   addit               {   $$ = $1; }
@@ -245,7 +250,7 @@ term:       term '*' fact       {   $$ = new cBinaryExprNode($$, new cOpNode(MUL
 fact:        '(' expr ')'       {   $$ = $2; }
         |   INT_VAL             {   $$ = new cIntExprNode($1); }
         |   FLOAT_VAL           {   $$ = new cFloatExprNode($1); }
-        |   varref              {}
+        |   varref              {   $$ = $1; }
 
 %%
 
@@ -256,4 +261,11 @@ int yyerror(const char *msg)
         << yytext << " on line " << yylineno << "\n";
 
     return 0;
+}
+
+void SemanticError(std::string error)		
+{		
+    std::cout << "ERROR: " << error << " on line " 		
+              << yylineno << "\n";		
+    yynerrs++;		
 }

@@ -16,16 +16,17 @@
 using std::string;
 
 #include "cAstNode.h"
+class cDeclNode;
+#include "cDeclNode.h"
 
 class cSymbol : public cAstNode
 {
     public:
         // param is name of symbol
-        cSymbol(string name, bool is_type = false) : cAstNode()
+        cSymbol(string name) : cAstNode()
         {
             m_id = ++nextId;        // get next available ID
             m_name = name;
-            m_is_type = is_type;
         }
 
         // return name of symbol
@@ -34,19 +35,20 @@ class cSymbol : public cAstNode
         virtual string AttributesToString()
         {
             string result(" id=\"");
-            result += std::to_string(m_id);
-            result += "\" name=\"" + m_name + "\"";
+            result += std::to_string(m_id) + "\"";
+            result += " name=\"" + m_name + "\"";
+            if (m_decl != nullptr)
+            {
+                result += " decl=\"" + std::to_string(m_decl->GetName()->m_id);
+                result +=  "\"";
+            }
             return result;
         }
         
-        bool IsType()
-        {
-            return m_is_type;
-        }
         
-        void IsType(bool val)
-        {
-            m_is_type = val;
+        cDeclNode *GetDecl() { return m_decl; }
+        void SetDecl(cDeclNode *decl) { 
+            m_decl = decl; 
         }
         
         virtual string NodeType() { return string("sym"); }
@@ -55,5 +57,5 @@ class cSymbol : public cAstNode
         static long long nextId;        // Next avail symbol ID
         long long m_id;                 // Unique ID for this symbol
         string m_name;                  // name of symbol
-        bool m_is_type = false;
+        cDeclNode *m_decl = nullptr;              // declaration of this symbol
 };

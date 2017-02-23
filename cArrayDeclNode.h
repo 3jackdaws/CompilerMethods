@@ -24,6 +24,13 @@ class cArrayDeclNode : public cDeclNode
             AddChild(type);
             AddChild(name);
             m_size = size;
+            
+            if ( ! g_SymbolTable.Find(name->GetName()) )
+            {
+                g_SymbolTable.Insert(name);
+            }
+            
+            name->SetDecl(this);
         }
         
         void SetSize(int size){
@@ -42,6 +49,18 @@ class cArrayDeclNode : public cDeclNode
             result += "'";
             return result;
         }
+        
+        virtual cSymbol* GetName(){
+            return dynamic_cast<cSymbol *>(GetChild(1));
+        }
+        
+        virtual cDeclNode * GetType()
+        {
+            return dynamic_cast<cSymbol *>(GetChild(0))->GetDecl();
+        }
+        
+        virtual bool IsArray() { return true; }
+        virtual bool IsType() { return true; }
         
         virtual string NodeType() { return string("array_decl"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
