@@ -20,6 +20,19 @@ class cBinaryExprNode : public cExprNode
             AddChild(right);
         }
         
+        virtual cDeclNode * GetType(){
+            cExprNode * type_left = static_cast<cExprNode *>(GetChild(0));
+            cExprNode * type_right = static_cast<cExprNode *>(GetChild(2));
+            if(type_left->GetType()->IsFloat()) return type_left->GetType();
+            if(type_right->GetType()->IsFloat()) return type_right->GetType();
+            
+            if(type_left->GetType()->IsInt()) return type_left->GetType();
+            if(type_right->GetType()->IsInt()) return type_right->GetType();
+            
+            return type_left->GetType();
+            
+        }
+        
     
         virtual string NodeType() { return string("expr"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }

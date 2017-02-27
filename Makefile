@@ -13,7 +13,8 @@ COPTS=-Wall -g -c  -O0 -std=c++11
 OBJS=main.o \
 	 langlex.o \
 	 langparse.o \
-	 cVisitor.o
+	 cVisitor.o \
+	 cSemanticVisitor.o
 
 all: lang
 
@@ -34,6 +35,9 @@ clean:
 
 main.o: main.cpp langparse.c langlex.c 
 	g++ $(COPTS) main.cpp -o $@
+	
+cSemanticVisitor.o: 
+	g++ $(COPTS) cSemanticVistor.cpp -o $@
 
 langlex.o: langlex.c
 	g++ $(COPTS) -Wno-sign-compare $? -o $@

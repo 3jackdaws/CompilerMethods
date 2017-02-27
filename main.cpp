@@ -16,6 +16,7 @@
 #include "cSymbolTable.h"
 #include "lex.h"
 #include "astnodes.h"
+#include "cSemanticVisitor.h"
 
 
 #include "langparse.h"
@@ -35,6 +36,8 @@ void InsertType(string name, int type){
 int main(int argc, char **argv)
 {
     std::cout << "Ian Murphy" << std::endl;
+    
+    cSemanticVisitor semantics;
    
     InsertType("char", 1);
     InsertType("int", 2);
@@ -74,11 +77,16 @@ int main(int argc, char **argv)
     result = yyparse();
     if (yyast_root != nullptr)
     {
+        semantics.VisitAllNodes(yyast_root);
+
+        result += semantics.NumErrors();
         if (result == 0)
         {
             output << yyast_root->ToString() << std::endl;
-        } else {
-            output << yynerrs << " Errors in compile\n";
+        } 
+        else 
+        {
+            output << yynerrs + semantics.NumErrors() << " Errors in compile\n";
         }
     }
 

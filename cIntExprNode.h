@@ -29,6 +29,10 @@ class cIntExprNode : public cExprNode
         {
             return m_value;
         }
+        
+        virtual cDeclNode * GetType(){
+            return g_SymbolTable.Find("int")->GetDecl();
+        }
 
         virtual string AttributesToString() 
         {

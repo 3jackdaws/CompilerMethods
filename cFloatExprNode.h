@@ -30,6 +30,10 @@ class cFloatExprNode : public cExprNode
         {
             return m_value;
         }
+        
+        virtual cDeclNode * GetType(){
+            return g_SymbolTable.Find("float")->GetDecl();
+        }
 
         virtual string AttributesToString() 
         {

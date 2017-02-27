@@ -25,6 +25,9 @@ class cFuncExprNode : public cExprNode
             AddChild(params);
         }
         
+        virtual cDeclNode * GetType(){
+            return static_cast<cSymbol *>(GetChild(0))->GetDecl()->GetType();
+        }
         virtual string NodeType() { return string("funcCall"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

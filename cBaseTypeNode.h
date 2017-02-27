@@ -19,7 +19,7 @@ class cBaseTypeNode : public cDeclNode
         
         virtual cDeclNode * GetType()
         {
-            return nullptr;
+            return this;
         }
         
         virtual cSymbol * GetName()
@@ -38,7 +38,8 @@ class cBaseTypeNode : public cDeclNode
         virtual bool IsFloat(){
             return m_base_type == 3;
         }
+        
     protected:
-        bool m_base_type; 
+        int m_base_type; 
         cSymbol * m_name;
 };

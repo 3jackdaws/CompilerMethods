@@ -1,4 +1,5 @@
 #pragma once
+#include "cVisitor.h"
 
 class cAstNode;
 class cBlockNode;
@@ -13,15 +14,15 @@ class cStmtNode;
 class cStmtsNode;
 class cSymbol;
 class cAssignNode;
-class cVarExprNode;
 
-class cVisitor
+class cSemanticVisitor:public cVisitor
 {
     public:
-        cVisitor() {}
+        cSemanticVisitor():cVisitor(){
+            
+        }
 
-        virtual void VisitAllNodes(cAstNode *node) = 0;
-        virtual void Visit(cAssignNode *node);
+
         virtual void Visit(cAstNode *node);
         virtual void Visit(cBlockNode *node);
         virtual void Visit(cDeclNode *node);
@@ -31,12 +32,17 @@ class cVisitor
         virtual void Visit(cOpNode *node);
         virtual void Visit(cPrintNode *node);
         virtual void Visit(cProgramNode *node);
+        virtual void Visit(cAssignNode *node);
         virtual void Visit(cStmtNode *node);
         virtual void Visit(cStmtsNode *node);
         virtual void Visit(cSymbol *node);
         virtual void Visit(cVarExprNode *node);
+        virtual void SemanticError(cAstNode *node, string msg);
+        void VisitAllNodes(cAstNode * node){ node->Visit(this); }
+        virtual int NumErrors();
     protected:
         void PreVisitAllNodes(cAstNode *node);
         void PostVisitAllNodes(cAstNode *node);
         void VisitAllChildren(cAstNode *node);
+        int m_numErrors = 0;
 };

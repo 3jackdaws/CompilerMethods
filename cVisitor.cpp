@@ -25,6 +25,7 @@ void cVisitor::VisitAllChildren(cAstNode *node)
     }
 }
 
+void cVisitor::Visit(cAssignNode *node)       { VisitAllChildren(node); }
 void cVisitor::Visit(cAstNode *node)          { VisitAllChildren(node); }
 void cVisitor::Visit(cBlockNode *node)        { VisitAllChildren(node); }
 void cVisitor::Visit(cDeclNode *node)         { VisitAllChildren(node); }
@@ -37,4 +38,5 @@ void cVisitor::Visit(cProgramNode *node)      { VisitAllChildren(node); }
 void cVisitor::Visit(cStmtNode *node)         { VisitAllChildren(node); }
 void cVisitor::Visit(cStmtsNode *node)        { VisitAllChildren(node); }
 void cVisitor::Visit(cSymbol *node)           { VisitAllChildren(node); }
+void cVisitor::Visit(cVarExprNode *node)      { VisitAllChildren(node); }
 

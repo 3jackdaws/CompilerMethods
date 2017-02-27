@@ -16,7 +16,7 @@ using std::string;
 using std::vector;
 
 #define print( x ) std::cout<< x << std::endl;
-
+extern int yylineno; 
 #include "cVisitor.h"
 
 class cAstNode
@@ -24,7 +24,9 @@ class cAstNode
     public:
         typedef vector<cAstNode*>::iterator iterator;
 
-        cAstNode() {}
+        cAstNode() {
+            m_lineNumber = yylineno;
+        }
         
         int GetLevel()
         {
@@ -98,6 +100,15 @@ class cAstNode
             m_children.clear();
         }
         
+        int LineNumber()
+        {
+            return m_lineNumber;
+        }
+        
+        void SetHasError()
+        {
+            m_hasSemanticError = true;
+        }
         
 
         virtual string AttributesToString()   { return string(""); }
@@ -107,6 +118,8 @@ class cAstNode
     protected:
         vector<cAstNode *> m_children;     // list of statements
         int m_level = 0;
+        int m_lineNumber;
+        bool m_hasSemanticError = false;
         
         string GetNodeLevelSpacing()
         {
