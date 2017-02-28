@@ -1,0 +1,15 @@
+{
+    int other();
+
+    int other()
+    {
+        return 1;
+    }
+
+    int other()
+    {
+        return 2;
+    }
+
+    other();
+}

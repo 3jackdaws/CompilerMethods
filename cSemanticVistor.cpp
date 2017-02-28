@@ -42,7 +42,7 @@ int cSemanticVisitor::NumErrors()
 
 void cSemanticVisitor::Visit(cAssignNode *node)
 { 
-    
+    // print("assign");
     if(node->GetLType() != node->GetRType())
     {
         SemanticError(node, "Cannot assign " + node->GetRType()->GetName() + " to " + node->GetLType()->GetName());
@@ -59,11 +59,13 @@ void cSemanticVisitor::Visit(cFuncExprNode *node)
 { 
     if(!node->DeclarationExists())
     {
+        // print("No decl");
         cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not declared");
         node->SetHasError();
     }
     else if(!node->GetFuncName()->GetDecl()->IsFunc())
     {
+        // print("Not func");
         cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not a function");
         node->SetHasError();
     }
@@ -73,33 +75,61 @@ void cSemanticVisitor::Visit(cFuncExprNode *node)
         
         if(!declnode->GetStmts() && !declnode->GetDecls())
         {
+            // print("Not fully def");
             cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not fully defined");
             node->SetHasError();
+            // print("Not fully def--");
         }
-    }
-    
-    cParamListNode * passed_params = node->GetParamListNode();
-    cParamsNode * required_params = node->GetFuncDeclNode()->GetParams();
-    
-    if(passed_params->NumberParams() != required_params->NumberParams())
-    {
-        cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with wrong number of arguments");
-        node->SetHasError();
-    }
-    else
-    {
-        for(int i = 0; i < passed_params->NumberParams(); i++)
+        
+        // print("set params");
+        cParamListNode * passed_params = node->GetParamListNode();
+        // cFuncDeclNode * func_decl = node->GetFuncDeclNode();
+        cParamsNode * required_params = node->GetFuncDeclNode()->GetParams();
+        // if(func_decl) required_params = func_decl->GetParams();
+        // else {print("NoFuncDecl");}
+        // print("set params--");
+        
+        // print(passed_params);
+        // print(required_params);
+        
+        bool params_differ = (passed_params && !required_params) || (required_params && !passed_params);
+        bool both_null = !(passed_params || required_params);
+        
+        // print(params_differ);
+        if(both_null){
+            // print("bn");
+        }
+        else if(params_differ || passed_params->NumberParams() != required_params->NumberParams())
         {
-            cSymbol * pp_type = passed_params->GetParamTypeSymbol(i);
-            cSymbol * rp_type = required_params->GetParamTypeSymbol(i);
-            
-            if(pp_type != rp_type)
+            // print("wrong num");
+            cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with wrong number of arguments");
+            node->SetHasError();
+        }
+        else
+        {
+            // print("for");
+            for(int i = 0; i < passed_params->NumberParams(); i++)
             {
-                cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with incompatible argument");
-                node->SetHasError();
+                // print(i);
+                cSymbol * pp_type = passed_params->GetParamTypeSymbol(i);
+                cSymbol * rp_type = required_params->GetParamTypeSymbol(i);
+                // print(pp_type->GetName() + " - " + rp_type->GetName());
+                if(pp_type != rp_type)
+                {
+                    if(rp_type->GetDecl()->IsInt() && pp_type->GetDecl()->IsChar())
+                    {
+                        
+                    }else{
+                        cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with incompatible argument");
+                        node->SetHasError();
+                    }
+                    
+                }
             }
         }
     }
+    
+    
     
     
     VisitAllChildren(node); 
@@ -113,7 +143,7 @@ void cSemanticVisitor::Visit(cStmtsNode *node)        { VisitAllChildren(node); 
 void cSemanticVisitor::Visit(cSymbol *node)
 { 
     if(node->GetDecl() == nullptr){
-        cSemanticVisitor::SemanticError(node, "Symbol " + node->GetName() + " not defined ");
+        cSemanticVisitor::SemanticError(node, "Symbol " + node->GetName() + " not defined");
         node->SetHasError();
     }
     VisitAllChildren(node); 

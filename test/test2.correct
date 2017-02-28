@@ -1,0 +1,5 @@
+ERROR: foo previously declared with different return type on line 3
+ERROR: bar previously declared with a different number of parameters on line 6
+ERROR: stuff previously declared with different parameters on line 9
+ERROR: aa previously declared as other than a function on line 12
+4 Errors in compile

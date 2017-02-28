@@ -1,0 +1,24 @@
+{
+    int aa;             // 4
+    int bb;             // 5
+
+    int foo();          // 6
+    float bar(int aa);  // 7 ( 8 )
+    int foo();          // 6
+    float bar(int aa);  // 7 ( 9 )
+
+    int foo()           // 6
+    {
+        int aa;         // 10
+        return aa;      // 10
+    }
+
+    float bar(int aa)   // 7 ( 11 )
+    {
+        int cc;         // 12
+        return aa*bb*cc;// 11 * 5 * 12
+    }
+
+    print(aa*bb);       // 4 * 5
+}
+

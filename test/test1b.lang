@@ -1,0 +1,18 @@
+{
+    int aaa;
+    {
+        int aaa;
+        int bbb;
+        float aaa;
+        {
+            int aaa;
+            int bbb;
+            float aaa;
+
+            print(aaa);
+        }
+        print(aaa);
+    }
+
+    aaa = 1;
+}

@@ -1,0 +1,28 @@
+{
+    int aa;
+    float bb;
+    char cc;
+
+    struct
+    {
+        int dd;
+    } s_0;
+
+    array int[10] a_0;
+    array a_0[5] a_1;
+
+    a_0 ee;
+    a_1 ff;
+
+    int foo(int gg)
+    {
+        int hh;
+
+        return hh*gg;
+    }
+
+    aa = foo(1);
+    foo(cc);
+    ff[1][aa] = ee[aa];
+}
+

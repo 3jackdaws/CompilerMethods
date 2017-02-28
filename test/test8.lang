@@ -1,0 +1,14 @@
+{
+    int func(int a, int b, float c)
+    {
+        return 5;
+    }
+    
+    func(1 ,2);
+    
+    func(1, 2, 3);
+    
+    func(1, 2, 3.0);
+    
+    
+}
