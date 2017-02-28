@@ -15,6 +15,7 @@
 
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
+#include "cParamsNode.h"
 
 class cFuncDeclNode : public cDeclNode
 {

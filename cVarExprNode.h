@@ -69,8 +69,21 @@ class cVarExprNode : public cExprNode
             for(int i = 0; i<NumChildren(); i++)
             {
                 expr = dynamic_cast<cExprNode*>(GetChild(i));
-                if(expr && ! expr->GetType()->GetName()->GetDecl()->IsInt() && ! expr->GetType()->GetName()->GetDecl()->IsChar() ){
-                    return false;
+                if(expr)
+                {
+                    if(expr->GetType()->GetName()->GetDecl()->GetType()->IsInt())
+                    {
+                        // do nothing
+                    }
+                    else if(expr->GetType()->GetName()->GetDecl()->GetType()->IsChar())
+                    {
+                        // doo nothing
+                    }
+                    else
+                    {
+                        // print(expr->GetType()->GetName()->GetDecl()->GetType()->GetName()->GetName());
+                        return false;
+                    }
                 } 
             }
             return true;

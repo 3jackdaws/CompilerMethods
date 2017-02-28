@@ -28,6 +28,7 @@ class cSemanticVisitor:public cVisitor
         virtual void Visit(cDeclNode *node);
         virtual void Visit(cDeclsNode *node);
         virtual void Visit(cExprNode *node);
+        virtual void Visit(cFuncExprNode *node);
         virtual void Visit(cIntExprNode *node);
         virtual void Visit(cOpNode *node);
         virtual void Visit(cPrintNode *node);

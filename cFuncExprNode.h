@@ -14,7 +14,11 @@
 //
 
 #include "cExprNode.h"
+
 #include "cParamListNode.h"
+
+#include "cFuncDeclNode.h"
+
 
 class cFuncExprNode : public cExprNode
 {
@@ -27,6 +31,22 @@ class cFuncExprNode : public cExprNode
         
         virtual cDeclNode * GetType(){
             return static_cast<cSymbol *>(GetChild(0))->GetDecl()->GetType();
+        }
+        
+        cSymbol * GetFuncName()
+        {
+            return static_cast<cSymbol *>(GetChild(0));
+        }
+        
+        bool DeclarationExists()
+        {
+            return static_cast<cSymbol *>(GetChild(0))->GetDecl() != nullptr;
+        }
+        
+        cFuncDeclNode * GetFuncDeclNode()
+        {
+            return static_cast<cFuncDeclNode*>(GetFuncName()->GetDecl());
+            
         }
         virtual string NodeType() { return string("funcCall"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }

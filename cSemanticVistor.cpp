@@ -54,6 +54,32 @@ void cSemanticVisitor::Visit(cBlockNode *node)        { VisitAllChildren(node); 
 void cSemanticVisitor::Visit(cDeclNode *node)         { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cDeclsNode *node)        { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cExprNode *node)         { VisitAllChildren(node); }
+void cSemanticVisitor::Visit(cFuncExprNode *node)
+{ 
+    if(!node->DeclarationExists())
+    {
+        cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not declared");
+        node->SetHasError();
+    }
+    else if(!node->GetFuncName()->GetDecl()->IsFunc())
+    {
+        cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not a function");
+        node->SetHasError();
+    }
+    else 
+    {
+        cFuncDeclNode * declnode = node->GetFuncDeclNode();
+        
+        if(!declnode->GetStmts() || !declnode->GetDecls())
+        {
+            cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not fully defined");
+            node->SetHasError();
+        }
+    }
+    
+    
+    VisitAllChildren(node); 
+}
 void cSemanticVisitor::Visit(cIntExprNode *node)      { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cOpNode *node)           { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cPrintNode *node)        { VisitAllChildren(node); }

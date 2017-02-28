@@ -31,6 +31,7 @@ void cVisitor::Visit(cBlockNode *node)        { VisitAllChildren(node); }
 void cVisitor::Visit(cDeclNode *node)         { VisitAllChildren(node); }
 void cVisitor::Visit(cDeclsNode *node)        { VisitAllChildren(node); }
 void cVisitor::Visit(cExprNode *node)         { VisitAllChildren(node); }
+void cVisitor::Visit(cFuncExprNode *node)     { VisitAllChildren(node); }
 void cVisitor::Visit(cIntExprNode *node)      { VisitAllChildren(node); }
 void cVisitor::Visit(cOpNode *node)           { VisitAllChildren(node); }
 void cVisitor::Visit(cPrintNode *node)        { VisitAllChildren(node); }
