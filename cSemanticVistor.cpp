@@ -54,6 +54,7 @@ void cSemanticVisitor::Visit(cBlockNode *node)        { VisitAllChildren(node); 
 void cSemanticVisitor::Visit(cDeclNode *node)         { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cDeclsNode *node)        { VisitAllChildren(node); }
 void cSemanticVisitor::Visit(cExprNode *node)         { VisitAllChildren(node); }
+
 void cSemanticVisitor::Visit(cFuncExprNode *node)
 { 
     if(!node->DeclarationExists())
@@ -70,10 +71,33 @@ void cSemanticVisitor::Visit(cFuncExprNode *node)
     {
         cFuncDeclNode * declnode = node->GetFuncDeclNode();
         
-        if(!declnode->GetStmts() || !declnode->GetDecls())
+        if(!declnode->GetStmts() && !declnode->GetDecls())
         {
             cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " is not fully defined");
             node->SetHasError();
+        }
+    }
+    
+    cParamListNode * passed_params = node->GetParamListNode();
+    cParamsNode * required_params = node->GetFuncDeclNode()->GetParams();
+    
+    if(passed_params->NumberParams() != required_params->NumberParams())
+    {
+        cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with wrong number of arguments");
+        node->SetHasError();
+    }
+    else
+    {
+        for(int i = 0; i < passed_params->NumberParams(); i++)
+        {
+            cSymbol * pp_type = passed_params->GetParamTypeSymbol(i);
+            cSymbol * rp_type = required_params->GetParamTypeSymbol(i);
+            
+            if(pp_type != rp_type)
+            {
+                cSemanticVisitor::SemanticError(node, node->GetFuncName()->GetName() + " called with incompatible argument");
+                node->SetHasError();
+            }
         }
     }
     

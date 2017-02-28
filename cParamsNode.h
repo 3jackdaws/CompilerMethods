@@ -26,6 +26,16 @@ class cParamsNode : public cAstNode
         {
             AddChild(decl);
         }
+        
+        int NumberParams()
+        {
+            return NumChildren();
+        }
+        
+        cSymbol * GetParamTypeSymbol(int index)
+        {
+            return static_cast<cDeclNode *>(GetChild(index))->GetType()->GetType()->GetName();
+        }
 
         virtual string NodeType() { return string("args"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }

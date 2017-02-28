@@ -28,6 +28,17 @@ class cParamListNode : public cStmtNode
             AddChild(expr);
         }
         
+        int NumberParams()
+        {
+            return NumChildren();
+        }
+        
+        cSymbol * GetParamTypeSymbol(int index)
+        {
+            return static_cast<cExprNode *>(GetChild(index))->GetType()->GetType()->GetName();
+        }
+        
+        
         virtual string NodeType() { return string("params"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

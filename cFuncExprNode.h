@@ -48,6 +48,11 @@ class cFuncExprNode : public cExprNode
             return static_cast<cFuncDeclNode*>(GetFuncName()->GetDecl());
             
         }
+        
+        cParamListNode * GetParamListNode()
+        {
+            return static_cast<cParamListNode *>(GetChild(1));
+        }
         virtual string NodeType() { return string("funcCall"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };
