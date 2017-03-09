@@ -8,44 +8,31 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
-void SemanticError(std::string error);
-
 #include "cAstNode.h"
+#include "cArrayDeclNode.h"
 #include "cProgramNode.h"
 #include "cBlockNode.h"
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
-
+#include "cParamsNode.h"
+#include "cStructDeclNode.h"
+#include "cVarDeclNode.h"
+#include "cFuncDeclNode.h"
 #include "cStmtNode.h"
 #include "cStmtsNode.h"
-
+#include "cIfNode.h"
+#include "cWhileNode.h"
+#include "cAssignNode.h"
 #include "cPrintNode.h"
+#include "cReturnNode.h"
 #include "cExprNode.h"
 #include "cIntExprNode.h"
 #include "cFloatExprNode.h"
-
-#include "cVarDeclNode.h"
-#include "cIfNode.h"
-#include "cWhileNode.h"
-#include "cReturnNode.h"
-#include "cAssignNode.h"
-#include "cVarExprNode.h"
-
-#include "cStructDeclNode.h"
-#include "cParamListNode.h"
-
-#include "cFuncExprNode.h"
-#include "cParamsNode.h"
-#include "cArrayDeclNode.h"
-#include "cFuncDeclNode.h"
-#include "cBaseTypeNode.h"
-
-#include "cOpNode.h"
 #include "cBinaryExprNode.h"
-
-
-
+#include "cVarExprNode.h"
+#include "cFuncExprNode.h"
+#include "cParamListNode.h"
 

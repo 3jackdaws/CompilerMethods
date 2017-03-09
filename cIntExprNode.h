@@ -10,7 +10,7 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
 #include "cAstNode.h"
@@ -24,14 +24,17 @@ class cIntExprNode : public cExprNode
         {
             m_value = value;
         }
-        
-        int GetValue()
+
+        virtual cDeclNode *GetType()
         {
-            return m_value;
-        }
-        
-        virtual cDeclNode * GetType(){
-            return g_SymbolTable.Find("int")->GetDecl();
+            cSymbol *sym;
+
+            if (-128 <= m_value && m_value <= 127)
+                sym = g_SymbolTable.Find("char");
+            else
+                sym = g_SymbolTable.Find("int");
+
+            return sym->GetDecl();
         }
 
         virtual string AttributesToString() 

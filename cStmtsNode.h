@@ -7,7 +7,7 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan 9, 2016
+// Date: Jan. 18, 2016
 //
 
 #include "cAstNode.h"
@@ -23,7 +23,7 @@ class cStmtsNode : public cAstNode
         }
 
         // Add a statement to the list
-        void AddStmt(cStmtNode *stmt)
+        void Insert(cStmtNode *stmt)
         {
             AddChild(stmt);
         }

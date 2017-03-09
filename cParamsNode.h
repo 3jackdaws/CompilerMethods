@@ -1,42 +1,28 @@
 #pragma once
 //**************************************
-// cDeclNode
+// cParamsNode.h
 //
-// Defines base class for all declarations.
-// Future labs will add features to this class.
+// Defines a class to represent a list of declarations.
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
 #include "cAstNode.h"
 #include "cDeclNode.h"
 
-class cParamsNode : public cAstNode
+class cParamsNode : public cDeclsNode
 {
     public:
-        cParamsNode(cDeclNode * decl) : cAstNode() {
-            AddChild(decl);
-        }
-        
-        // Add a decl to the list
-        void AddDecl(cDeclNode *decl)
+        // param is the first decl in this decls
+        cParamsNode(cDeclNode *decl) : cDeclsNode(decl)
         {
-            AddChild(decl);
-        }
-        
-        int NumberParams()
-        {
-            return NumChildren();
-        }
-        
-        cSymbol * GetParamTypeSymbol(int index)
-        {
-            return static_cast<cDeclNode *>(GetChild(index))->GetType()->GetType()->GetName();
+            // child is added in base constructor
         }
 
+        // return the XML node name
         virtual string NodeType() { return string("args"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

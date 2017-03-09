@@ -1,135 +1,150 @@
 #pragma once
 //**************************************
-// cIntExprNode.h
+// cVarExprNode.h
 //
-// Defines an AST node for an integer constant (literals).
+// Defines AST node for a variable reference
 //
-// Inherits from cExprNode so that integer constants can be used anywhere 
-// expressions are used.
+// Inherits from cExprNode so variable refs can be used in expressions`
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
+#include "cSymbol.h"
 #include "cAstNode.h"
 #include "cExprNode.h"
 
 class cVarExprNode : public cExprNode
 {
     public:
-        // param is the value of the integer constant
-        cVarExprNode(cSymbol * var) : cExprNode()
-        {
-            AddChild(var);
-        }
-        
-        void AddSymbol(cSymbol * name)
+        // param is the symbol for the variable
+        cVarExprNode(cSymbol *name)
+            : cExprNode()
         {
             AddChild(name);
         }
-        
-        virtual cDeclNode * GetType(){
-            if(IsBeingIndexed()) return GetActualTypeSymbol()->GetDecl()->GetType();
-            
-            return static_cast<cSymbol *>(GetChild(0))->GetDecl();
-        }
-        
-        cExprNode * GetFirstIndex()
-        {
-            cExprNode * index = nullptr;
-            for(int i = 0; i<NumChildren();i++)
-            {
-                index = dynamic_cast<cExprNode*>(GetChild(i));
-                if(index) break;
-            }
-            return index;
-        }
-        
-        cExprNode * GetIndexExpr(int num)
-        {
-            cExprNode * expr = nullptr;
-            if(num < NumIndices())
-            {
-                int count = 0;
-                for(int i = 0; i<NumChildren() && count<=num; i++)
-                {
-                    expr = dynamic_cast<cExprNode*>(GetChild(i));
-                    if(expr) count++;
-                }
-                
-            }
-            return expr;
-        }
-        
-        bool IndicesAreInts()
-        {
-            cExprNode * expr = nullptr;
-            for(int i = 0; i<NumChildren(); i++)
-            {
-                expr = dynamic_cast<cExprNode*>(GetChild(i));
-                if(expr)
-                {
-                    if(expr->GetType()->GetName()->GetDecl()->GetType()->IsInt())
-                    {
-                        // do nothing
-                    }
-                    else if(expr->GetType()->GetName()->GetDecl()->GetType()->IsChar())
-                    {
-                        // doo nothing
-                    }
-                    else
-                    {
-                        // print(expr->GetType()->GetName()->GetDecl()->GetType()->GetName()->GetName());
-                        return false;
-                    }
-                } 
-            }
-            return true;
-        }
-        
-        bool IsBeingIndexed()
-        {
-            return GetFirstIndex() != nullptr;
-        }
-        
-        int NumIndices()
-        {
-            cExprNode * index = nullptr;
-            int count = 0;
-            for(int i = 0; i<NumChildren();i++)
-            {
-                index = dynamic_cast<cExprNode*>(GetChild(i));
-                if(index) count++;
-            }
-            return count;
-        }
-        
-        cSymbol * GetActualTypeSymbol()
-        {
-            int num = NumIndices();
-            cSymbol * type = GetVarType();
-            if(GetVarType()->GetDecl()->IsArray())
-            {
-                
-                for(int i = 0;i<num;i++)
-                {
-                    type = type->GetDecl()->GetType()->GetType()->GetName();
-                }
 
+        // called for the fields in struct refs
+        void AddElement(cSymbol *name)
+        {
+            AddChild(name);
+        }
+
+        void AddElement(cExprNode *index)
+        {
+            AddChild(index);
+        }
+
+        cSymbol* GetName() 
+        {
+            return static_cast<cSymbol*>(GetChild(0));
+        }
+
+        // return a string representation of the name of the var
+        virtual string GetTextName()
+        {
+            string name("");
+            cSymbol* sym;
+
+            sym = GetName();
+
+            name += sym->GetName();
+
+            for (int ii=0; ii<NumItems(); ii++)
+            {
+                if (ItemIsIndex(ii))
+                {
+                    name += "[]";
+                }
+                else
+                {
+                    sym = GetElement(ii);
+                    name += "." + sym->GetName();
+                }
             }
-            return type;
+
+            return name;
+        }
+
+        // return the type of the VarExpr. This includes dereferencing arrays
+        virtual cDeclNode *GetType() 
+        { 
+            cDeclNode* decl = GetName()->GetDecl();
+            if (decl == nullptr) return nullptr;
+
+            cDeclNode* type = decl->GetType();
+
+            if (type->IsArray())
+            {
+                return type->GetType(NumItems());
+            }
+            else
+            {
+                return type; 
+            }
+        }
+
+        int NumItems() { return NumChildren() - 1; }
+
+        bool ItemIsIndex(int index)
+        {
+            // if the dynamic cast fails, this item must be a cSymbol* for
+            // a struct member
+            return dynamic_cast<cExprNode*>(GetChild(index + 1)) != nullptr;
+        }
+
+        cSymbol* GetElement(int index)
+        {
+             return (cSymbol*)GetChild(index + 1);
+        }
+
+        cExprNode* GetIndex(int index)
+        {
+             return (cExprNode*)GetChild(index + 1);
         }
         
-        cSymbol * GetVarSymbol()
+        int GetSize()
         {
-            return static_cast<cSymbol *>(GetChild(0));
+            return GetName()->GetDecl()->GetSize();
         }
         
-        cSymbol * GetVarType()
+        int GetOffset()
         {
-            return static_cast<cSymbol *>(GetChild(0))->GetDecl()->GetType()->GetName();
+             return GetName()->GetDecl()->GetOffset();
+        }
+        
+        virtual string AttributesToString()
+        {
+            int size = this->GetSize();
+            int offset = this->GetOffset();
+            string row_sizes_string = "";
+            
+            cDeclNode* decl = this->GetName()->GetDecl()->GetType();
+            int is_array = decl->IsArray();
+            if (is_array)
+            {
+                cDeclNode* base = decl->GetBaseType();
+                row_sizes_string = std::to_string(base->Sizeof());
+                
+                while (base->IsArray())
+                {
+                    base = base->GetBaseType();
+                    row_sizes_string += " " + std::to_string(base->Sizeof());
+                }
+            }
+            
+            string result(" size=\"");
+            result += std::to_string(size) + "\"";
+            result += " offset=\"" + std::to_string(offset) + "\"";
+            
+            if (is_array)
+            {
+                result += " rowsizes=\"" + row_sizes_string + "\"";
+            }
+            
+            return result;
         }
 
         virtual string NodeType() { return string("varref"); }

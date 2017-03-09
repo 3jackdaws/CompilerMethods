@@ -1,27 +1,28 @@
 #pragma once
 //**************************************
-// cStmtNode.h
+// cReturnNode.h
 //
-// Defines abstract class for a single statment
-//
-// NOTE: all statement types must inherit from this class
+// Defines AST node for a lang return statement
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Feb. 18, 2017
 //
 
+
+#include "cAstNode.h"
 #include "cStmtNode.h"
+#include "cExprNode.h"
 
 class cReturnNode : public cStmtNode
 {
     public:
-        cReturnNode(cExprNode * expr) : cStmtNode() 
+        cReturnNode(cExprNode *expr)
         {
-            AddChild((cAstNode *)expr);
+            AddChild(expr);
         }
-        
+
         virtual string NodeType() { return string("return"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

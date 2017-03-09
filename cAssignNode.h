@@ -1,50 +1,41 @@
 #pragma once
 //**************************************
-// cExprNode.h
+// cAssignNode.h
 //
-// Defines base class for all expressions
-//
-// This is a pure virtual class because there is no definition for
-// cAstNode::ToString()
+// Defines AST node for assignment statments
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
+#include "cAstNode.h"
 #include "cStmtNode.h"
+#include "cExprNode.h"
 #include "cVarExprNode.h"
 
 class cAssignNode : public cStmtNode
 {
     public:
-        cAssignNode(cVarExprNode * varexpr, cExprNode * expr) : cStmtNode() 
+        // params are the lval and the expression
+        cAssignNode(cVarExprNode *lval, cExprNode *expr)
+            : cStmtNode()
         {
-            AddChild(varexpr);
+            AddChild(lval);
             AddChild(expr);
         }
-        
-        cVarExprNode * GetLVal()
-        {
-            return static_cast<cVarExprNode *>(GetChild(0));
+
+        cVarExprNode *GetLVal() 
+        { 
+            return static_cast<cVarExprNode*>(GetChild(0));
         }
-        
-        cExprNode * GetRVal()
-        {
-            return static_cast<cExprNode *>(GetChild(1));
+
+        cExprNode *GetExpr() 
+        { 
+            return static_cast<cExprNode*>(GetChild(1));
         }
-        
-        cSymbol * GetLType()
-        {
-            return GetLVal()->GetType()->GetType()->GetName();
-        }
-        
-        cSymbol * GetRType()
-        {
-            return GetRVal()->GetType()->GetType()->GetName();
-        }
-        
+
         virtual string NodeType() { return string("assign"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
 };

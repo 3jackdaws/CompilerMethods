@@ -8,7 +8,7 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Feb. 11, 2017
 //
 
 #include <string>
@@ -16,7 +16,6 @@
 using std::string;
 
 #include "cAstNode.h"
-class cDeclNode;
 #include "cDeclNode.h"
 
 class cSymbol : public cAstNode
@@ -27,11 +26,17 @@ class cSymbol : public cAstNode
         {
             m_id = ++nextId;        // get next available ID
             m_name = name;
+            m_decl = nullptr;
         }
 
         // return name of symbol
         string GetName() { return m_name; }
+        
+        // Get/Set the decl associated with this symbol
+        cDeclNode *GetDecl() { return m_decl; }
+        void SetDecl(cDeclNode *decl) { m_decl = decl; }
 
+        // return attributes for ToString()
         virtual string AttributesToString()
         {
             string result(" id=\"");
@@ -44,18 +49,15 @@ class cSymbol : public cAstNode
             }
             return result;
         }
-        
-        
-        cDeclNode *GetDecl() { return m_decl; }
-        void SetDecl(cDeclNode *decl) { 
-            m_decl = decl; 
-        }
-        
+
+        // Node type for ToString()
         virtual string NodeType() { return string("sym"); }
+
+        // standard visitor
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:
         static long long nextId;        // Next avail symbol ID
         long long m_id;                 // Unique ID for this symbol
         string m_name;                  // name of symbol
-        cDeclNode *m_decl = nullptr;              // declaration of this symbol
+        cDeclNode *m_decl;              // declaration of this symbol
 };

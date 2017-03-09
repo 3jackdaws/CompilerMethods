@@ -1,69 +1,102 @@
 #pragma once
 //**************************************
-// cExprNode.h
+// cArrayDeclNode.h
 //
-// Defines base class for all expressions
+// Defines AST node for a array declaration
 //
-// This is a pure virtual class because there is no definition for
-// cAstNode::ToString()
+// Inherits from cDeclNode because this is a type of declaration
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
+#include "cAstNode.h"
 #include "cDeclNode.h"
 #include "cDeclsNode.h"
+#include "cSymbol.h"
+#include "cSymbolTable.h"
 
 class cArrayDeclNode : public cDeclNode
 {
     public:
-        cArrayDeclNode(cSymbol * type, cSymbol * name, int size):cDeclNode(){
-            
-            AddChild(type);
-            AddChild(name);
-            m_size = size;
-            
-            if ( ! g_SymbolTable.Find(name->GetName()) )
+        // params are: 
+        //     the name of the base type for this array
+        //     the cSymbol for the name of the array
+        //     the size of the array
+        cArrayDeclNode( cSymbol *type_id,
+                        cSymbol *array_id,
+                        int size)
+            : cDeclNode()
+        {
+            cSymbol *name;
+
+            AddChild(type_id);
+
+            // Figure out if the ID we were passed already exists in the 
+            // local symbol table. 
+            name = g_SymbolTable.FindLocal(array_id->GetName());
+            if (name == nullptr)
             {
+                // No: this is good. A later lab will cause an error if it does
+                name = array_id;
+
+                // If the symbol exists in an outer scope, we need to create
+                // a new one instead of re-using the symbol from the outer scope
+                if (g_SymbolTable.Find(array_id->GetName()) != nullptr)
+                {
+                    name = new cSymbol(array_id->GetName());
+                }
+
+                name->SetDecl(this);
+
+                // insert the name of the array into the global symbol table
                 g_SymbolTable.Insert(name);
             }
-            
-            name->SetDecl(this);
+
+            AddChild(name);
+
+            m_count = size;
         }
-        
-        void SetSize(int size){
-            m_size = size;
-        }
-        
-        int GetSize()
+
+        // return the type of the elements
+        virtual cDeclNode *GetBaseType()
         {
-            return m_size;
+            cSymbol* type = static_cast<cSymbol*>(GetChild(0));
+
+            return type->GetDecl();
         }
-        
-        virtual string AttributesToString() 
+
+        // Since this IS a type, return self
+        virtual cDeclNode *GetType() { return this; }
+
+        virtual cDeclNode *GetType(int depth) 
+        { 
+            if (depth == 0) return this;
+            return GetBaseType()->GetType(depth - 1); 
+        }
+
+        virtual bool IsType()   { return true; }
+        virtual bool IsArray()  { return true; }
+
+        virtual cSymbol* GetName()
         {
-            string result(" count='");
-            result += std::to_string(m_size);
-            result += "'";
-            return result;
+            return static_cast<cSymbol*>(GetChild(1));
         }
-        
-        virtual cSymbol* GetName(){
-            return dynamic_cast<cSymbol *>(GetChild(1));
-        }
-        
-        virtual cDeclNode * GetType()
-        {
-            return dynamic_cast<cSymbol *>(GetChild(0))->GetDecl();
-        }
-        
-        virtual bool IsArray() { return true; }
-        virtual bool IsType() { return true; }
-        
+
         virtual string NodeType() { return string("array_decl"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
+        virtual string AttributesToString()
+        {
+            return " count=\"" + std::to_string(m_count) + "\"";
+        }
+        
+        virtual int Sizeof()
+        {
+            return m_count * GetBaseType()->Sizeof();
+        }
     protected:
-        int m_size;        // value of integer constant (literal)
+        int m_count;
+
 };

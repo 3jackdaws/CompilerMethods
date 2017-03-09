@@ -1,4 +1,0 @@
-ERROR: Cannot assign float to int on line 7
-ERROR: Cannot assign int to float on line 8
-ERROR: Symbol c not defined on line 9
-3 Errors in compile

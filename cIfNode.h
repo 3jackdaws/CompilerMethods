@@ -1,32 +1,35 @@
 #pragma once
 //**************************************
-// cExprNode.h
+// cIfNode.h
 //
-// Defines base class for all expressions
+// Defines AST node for an if statement
 //
-// This is a pure virtual class because there is no definition for
-// cAstNode::ToString()
+// Inherits from cStmtNode so that if statements can be included in lists of
+// statements
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
+#include "cAstNode.h"
 #include "cStmtNode.h"
+#include "cExprNode.h"
 
 class cIfNode : public cStmtNode
 {
     public:
-        cIfNode(cStmtNode * expr, cStmtsNode * nIf, cStmtsNode * nElse) : cStmtNode() 
+        // params are the condition, the list of statments for the if part,
+        // and the list of statements for the else part. The else part can
+        // be nullptr
+        cIfNode(cExprNode *cond, cStmtsNode *ifStmt, cStmtsNode *elseStmt)
         {
-            AddChild(expr);
-            AddChild(nIf);
-            AddChild(nElse);
+            AddChild(cond);
+            AddChild(ifStmt);
+            AddChild(elseStmt);
         }
-        
+
         virtual string NodeType() { return string("if"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-    protected:
-        float m_value;        // value of integer constant (literal)
 };

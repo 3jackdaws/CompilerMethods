@@ -6,7 +6,7 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
 #include <stdio.h>
@@ -16,32 +16,20 @@
 #include "cSymbolTable.h"
 #include "lex.h"
 #include "astnodes.h"
-#include "cSemanticVisitor.h"
-
-
 #include "langparse.h"
+#include "cSemantics.h"
+#include "cSizeOffsetVisitor.h"
 
 // define global variables
-cSymbolTable g_SymbolTable;
 long long cSymbol::nextId;
-
-
-void InsertType(string name, int type){
-    cSymbol * symbol = new cSymbol(name);
-    g_SymbolTable.Insert(symbol);
-    new cBaseTypeNode(name, type);
-}
 
 // takes two string args: input_file, and output_file
 int main(int argc, char **argv)
 {
     std::cout << "Ian Murphy" << std::endl;
-    
-    cSemanticVisitor semantics;
-   
-    InsertType("char", 1);
-    InsertType("int", 2);
-    InsertType("float", 3);
+
+    cSemantics semantics;
+    cSizeOffsetVisitor sizeoffset;
 
     const char *outfile_name;
     int result = 0;
@@ -74,6 +62,8 @@ int main(int argc, char **argv)
     // fixup cout so it redirects to output
     std::cout.rdbuf(output.rdbuf());
 
+    g_SymbolTable.InitRootTable();
+
     result = yyparse();
     if (yyast_root != nullptr)
     {
@@ -82,6 +72,7 @@ int main(int argc, char **argv)
         result += semantics.NumErrors();
         if (result == 0)
         {
+            sizeoffset.VisitAllNodes(yyast_root);
             output << yyast_root->ToString() << std::endl;
         } 
         else 

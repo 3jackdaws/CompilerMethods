@@ -8,10 +8,8 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 26, 2016
+// Date: Jan. 18, 2016
 //
-
-// #define print(x) std::cout << x << std::endl;
 
 #include <string>
 #include <unordered_map>
@@ -64,8 +62,6 @@ class cSymbolTable
         // Assumes the symbol is not already in the table
         void Insert(cSymbol *sym)
         {
-            // print("Insert")
-            // print(sym->ToString())
             pair<string, cSymbol*> new_val(sym->GetName(), sym);
             m_SymbolTable.front()->insert(new_val);
         }
@@ -77,19 +73,14 @@ class cSymbolTable
         {
             cSymbol *sym = nullptr;
 
-            list<symbolTable_t *>::iterator it = m_SymbolTable.begin();
-
-            while (it != m_SymbolTable.end())
+            for (auto it : m_SymbolTable)
             {
-                sym = FindInTable(*it, name);
-                if (sym != nullptr){
-                    // print(sym->ToString())
-                    
-                    return sym;
-                } 
+                sym = FindInTable(it, name);
+                if (sym != nullptr) return sym;
 
                 it++;
             }
+
             return nullptr;
         }
 
@@ -100,6 +91,9 @@ class cSymbolTable
             return FindInTable(m_SymbolTable.front(), name);
         }
 
+        // Place predefined symbols in the root table
+        // Called from main() prior to parsing
+        void InitRootTable();
     protected:
         // list of symbol tables. The list contains the different levels
         // in the nested table.
@@ -121,5 +115,5 @@ class cSymbolTable
 };
 
 // Declaration for the global symbol table.
-// Definition is in main.cpp
+// Definition is in cSymbolTable.cpp
 extern cSymbolTable g_SymbolTable;

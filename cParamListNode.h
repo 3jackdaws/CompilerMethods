@@ -1,44 +1,59 @@
 #pragma once
 //**************************************
-// cExprNode.h
+// cParamListNode.h
 //
-// Defines base class for all expressions
-//
-// This is a pure virtual class because there is no definition for
-// cAstNode::ToString()
+// Defines AST node for actual params passed to a function
 //
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
 
-#include "cStmtNode.h"
+#include "cAstNode.h"
+#include "cExprNode.h"
 
-class cParamListNode : public cStmtNode
+class cParamListNode : public cAstNode
 {
     public:
-        cParamListNode(cExprNode * expr) : cStmtNode() 
+        // param is first actual param passed to function
+        cParamListNode(cExprNode *param)
+            : cAstNode()
         {
-            AddChild(expr);
+            AddChild(param);
         }
-        
-        void AddExpr(cExprNode * expr)
+
+        // add the next actual param
+        void Insert(cExprNode *param)
         {
-            AddChild(expr);
+            AddChild(param);
         }
-        
-        int NumberParams()
+
+        cExprNode* GetParam(int index)
         {
-            return NumChildren();
+            return static_cast<cExprNode*>(GetChild(index));
         }
-        
-        cSymbol * GetParamTypeSymbol(int index)
-        {
-            return static_cast<cExprNode *>(GetChild(index))->GetType()->GetType()->GetName();
-        }
-        
-        
+
         virtual string NodeType() { return string("params"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
+        
+        int GetSize()
+        {
+            return m_size;
+        }
+        
+        void SetSize(int size)
+        {
+            m_size = size;
+        }
+        
+        virtual string AttributesToString()
+        {
+            string result(" size=\"");
+            result += std::to_string(this->m_size) + "\"";
+            return result;
+        }
+        
+    protected:
+        int m_size = 0;
 };

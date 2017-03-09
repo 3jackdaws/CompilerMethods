@@ -7,9 +7,8 @@
 // Author: Phil Howard 
 // phil.howard@oit.edu
 //
-// Date: Jan. 18, 2015
+// Date: Jan. 18, 2016
 //
-
 
 #include "cSymbolTable.h"
 #include "cAstNode.h"
@@ -21,4 +20,3 @@ extern int yylineno;                    // line number of input file
 extern int yynerrs;                     // Num of compile errors
 extern FILE *yyin;                      // FILE pointer for input
 extern cAstNode *yyast_root;            // root of AST
-extern void SemanticError(std::string error);
