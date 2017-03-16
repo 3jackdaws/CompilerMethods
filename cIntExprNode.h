@@ -43,6 +43,7 @@ class cIntExprNode : public cExprNode
         }
         virtual string NodeType() { return string("int"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
+        int GetValue(){ return m_value; }
     protected:
         int m_value;        // value of integer constant (literal)
 };

@@ -59,7 +59,6 @@ class cVarDeclNode : public cDeclNode
 
         virtual bool IsVar()  { return true; }
 
-        // return the type of the var
         virtual cDeclNode *GetType() 
         { 
             cSymbol* type = static_cast<cSymbol*>(GetChild(0));
@@ -74,17 +73,4 @@ class cVarDeclNode : public cDeclNode
 
         virtual string NodeType() { return string("var_decl"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-        
-        virtual string AttributesToString()
-        {
-            string result(" size=\"");
-            result += std::to_string(m_size) + "\"";
-            result += " offset=\"" + std::to_string(this->m_offset) + "\"";
-            return result;
-        }
-        
-        virtual int Sizeof()
-        {
-            return GetType()->Sizeof();
-        }
 };

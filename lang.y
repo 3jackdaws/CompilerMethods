@@ -32,9 +32,10 @@
     cSymbol*        symbol;
     cSymbolTable::symbolTable_t*  sym_table;
     cDeclsNode*     decls_node;
+    cParamsNode*    params_node;
     cDeclNode*      decl_node;
     cVarExprNode*   varref_node;
-    cParamListNode* params_node;
+    cParamListNode* paramlist_node;
     }
 
 %{
@@ -73,12 +74,12 @@
 %type <func_node> func_header
 %type <func_node> func_prefix
 %type <funccall_node> func_call
-%type <decls_node> paramsspec
+%type <params_node> paramsspec
 %type <decl_node> paramspec
 %type <stmts_node> stmts
 %type <stmt_node> stmt
 %type <varref_node> lval
-%type <params_node> params
+%type <paramlist_node> paramlist
 %type <expr_node> param
 %type <expr_node> expr
 %type <expr_node> addit
@@ -109,7 +110,7 @@ decl:       var_decl ';'        { $$ = $1; }
         |   struct_decl ';'     { $$ = $1; }
         |   array_decl ';'      { $$ = $1; }
         |   func_decl           { $$ = $1; }
-        |   error ';'           { $$ = nullptr; }
+        |   error ';'           {}
 
 var_decl:   TYPE_ID IDENTIFIER  { $$ = new cVarDeclNode($1, $2); }
 struct_decl:  STRUCT open decls close IDENTIFIER    
@@ -136,7 +137,7 @@ func_header: func_prefix paramsspec ')'
                                 { 
                                   $$ = $1; $$->AddParams($2); 
                                 }
-        |    func_prefix ')'    { $$ = $1; $$->AddParams(nullptr);}
+        |    func_prefix ')'    { $$ = $1; }
 func_prefix: TYPE_ID IDENTIFIER '('
                                 { $$ = new cFuncDeclNode($1, $2); 
                                   g_SymbolTable.IncreaseScope(); 
@@ -163,9 +164,9 @@ stmt:       IF '(' expr ')' stmts ENDIF ';'
         |   func_call ';'       { $$ = $1; }
         |   block               { $$ = $1; }
         |   RETURN expr ';'     { $$ = new cReturnNode($2); }
-        |   error ';'           { $$ = nullptr; }
+        |   error ';'           {}
 
-func_call:  IDENTIFIER '(' params ')' { $$ = new cFuncExprNode($1, $3); }
+func_call:  IDENTIFIER '(' paramlist ')' { $$ = new cFuncExprNode($1, $3); }
         |   IDENTIFIER '(' ')'  { $$ = new cFuncExprNode($1, nullptr); }
 
 varref:   varref '.' varpart    { $$ = $1; $$->AddElement($3); }
@@ -176,7 +177,7 @@ varpart:  IDENTIFIER            { $$ = $1; }
 
 lval:     varref                { $$ = $1; }
 
-params:     params',' param     { $$ = $1; $$->Insert($3); }
+paramlist:     paramlist ',' param     { $$ = $1; $$->Insert($3); }
         |   param               { $$ = new cParamListNode($1); }
 
 param:      expr                { $$ = $1; }
@@ -203,7 +204,7 @@ fact:        '(' expr ')'       { $$ = $2; }
 // Function to format error messages
 int yyerror(const char *msg)
 {
-    std::cout << "ERROR: " << msg << " at symbol "
+    std::cerr << "ERROR: " << msg << " at symbol "
         << yytext << " on line " << yylineno << "\n";
 
     return 0;

@@ -19,8 +19,6 @@ class cDeclNode : public cAstNode
 
         // return the decl for the type of the thing this node represents
         virtual cDeclNode *GetType() = 0;
-
-        // note: should probably generate an error if depth != 0
         virtual cDeclNode *GetType(int depth) { return GetType(); }
         virtual cDeclNode *GetBaseType() { return GetType(); }
 
@@ -37,17 +35,11 @@ class cDeclNode : public cAstNode
         virtual bool IsFloat()  { return false; }
         virtual bool IsInt()    { return false; }
         virtual bool IsChar()   { return false; }
-        virtual bool IsNumeric()
-        { return IsInt() || IsChar() || IsFloat(); }
-        virtual bool IsIntegral() 
-        { return IsInt() || IsChar(); }
-        
-        virtual int  Sizeof()   = 0;
+        //virtual int  Sizeof()   = 0;
 
         virtual string NodeType() { return string("decl"); }
         bool IsCompatibleWith(cDeclNode *decl)
         {
-            if (decl == nullptr) return false;
             if (IsFunc()) return false;
             if (this == decl) return true;
             if (IsStruct() || decl->IsStruct()) return false;
@@ -57,30 +49,26 @@ class cDeclNode : public cAstNode
             //if (Sizeof() >= decl->Sizeof()) return true;
             return false;
         }
+
+        virtual int  GetSize()  { return m_size; }
+        virtual int  GetOffset()  { return m_offset; }
+        virtual void SetSize(int size)  { m_size = size; }
+        virtual void SetOffset(int offset)  { m_offset = offset; }
+
+        virtual string AttributesToString()
+        {
+            if (m_size != 0 || m_offset != 0)
+            {
+                return " size=\"" + std::to_string(m_size) + "\" offset=\"" +
+                    std::to_string(m_offset) + "\"";
+            }
+            else
+            {
+                return "";
+            }
+        }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-        
-        void SetSize(int size)
-        {
-            m_size = size;
-        }
-        
-        int GetSize()
-        {
-            return m_size;
-        }
-        
-        void SetOffset(int offset)
-        {
-            m_offset = offset;
-        }
-        
-        int GetOffset()
-        {
-            return m_offset;
-        }
-        
-        
     protected:
-        int m_size = 0;
-        int m_offset = 0;
+        int m_size;
+        int m_offset;
 };

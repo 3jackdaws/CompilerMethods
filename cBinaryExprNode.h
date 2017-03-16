@@ -28,8 +28,6 @@ class cBinaryExprNode : public cExprNode
             AddChild(right);
         }
 
-        // return the resulting type of the operation
-        // performs operand promotion of numeric types
         virtual cDeclNode *GetType()
         {
             cDeclNode *left;
@@ -37,17 +35,6 @@ class cBinaryExprNode : public cExprNode
 
             left = GetLeft()->GetType();
             right = GetRight()->GetType();
-
-            if (left == nullptr || right == nullptr) 
-            {
-                SetHasError();
-                return nullptr;
-            }
-            if (!left->IsNumeric() || !right->IsNumeric())
-            {
-                SetHasError();
-                return nullptr;
-            }
 
             if (left == right) 
                 return left;
@@ -71,6 +58,11 @@ class cBinaryExprNode : public cExprNode
         cExprNode* GetRight()
         {
             return static_cast<cExprNode*>(GetChild(2));
+        }
+        
+        cOpNode * GetOp()
+        {
+            return static_cast<cOpNode*>(GetChild(1));
         }
 
         virtual string NodeType() { return string("expr"); }

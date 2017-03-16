@@ -28,33 +28,27 @@ class cDeclsNode : public cAstNode
             AddChild(decl);
         }
 
-        // return a particular decl from the list
         cDeclNode* GetDecl(int index)
         {
             return static_cast<cDeclNode*>(GetChild(index));
         }
-        
-        int GetSize()
-        {
-            return m_size;
-        }
-        
-        void SetSize(int size)
-        {
-            m_size = size;
-        }
 
         virtual string NodeType() { return string("decls"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-        
+
+        void SetSize(int size)      { m_size = size; }
+        int GetSize()               { return m_size; }
         virtual string AttributesToString()
         {
-            if(m_size == 0) return "";
-            string result(" size=\"");
-            result += std::to_string(m_size) + "\"";
-            return result;
+            if (m_size != 0)
+            {
+                return " size=\"" + std::to_string(m_size) + "\"";
+            }
+            else
+            {
+                return "";
+            }
         }
-        
     protected:
         int m_size;
 };

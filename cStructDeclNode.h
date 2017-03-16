@@ -72,11 +72,6 @@ class cStructDeclNode : public cDeclNode
 
         virtual string NodeType() { return string("struct_decl"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-        
-        virtual int Sizeof()
-        {
-            return GetType()->Sizeof();
-        }
     protected:
         cSymbolTable::symbolTable_t *m_symTbl; 
 

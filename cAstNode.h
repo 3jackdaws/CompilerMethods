@@ -26,7 +26,6 @@ extern void SemanticError(std::string error);
 class cAstNode
 {
     public:
-        // iterator for going through the children
         typedef vector<cAstNode*>::iterator iterator;
 
         cAstNode() 
@@ -63,8 +62,6 @@ class cAstNode
         bool HasError()    { return m_hasSemanticError; }
 
         // return a string representation of the node
-        // The recurses through the whole AST
-        // This should NOT be overridden in subclasses
         string ToString() 
         {
             string result("");
@@ -92,8 +89,6 @@ class cAstNode
 
         int LineNumber() { return m_lineNumber; }
 
-        // AttributesToString must be overriden by subclasses
-        // that have attributes.
         virtual string AttributesToString()   { return string(""); }
         virtual string NodeType() = 0; //      { return "AST"; }
         virtual void Visit(cVisitor *visitor) = 0;

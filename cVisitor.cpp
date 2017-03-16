@@ -1,15 +1,3 @@
-//**************************************
-// cVisitor.cpp
-//
-// Implementation of visitor base class.
-// This has to be in a cpp to avoid curcular includes
-//
-// Author: Phil Howard 
-// phil.howard@oit.edu
-//
-// Date: Feb. 20, 2017
-//
-
 #include "lex.h"
 #include "cVisitor.h"
 #include "astnodes.h"
@@ -33,12 +21,7 @@ void cVisitor::VisitAllChildren(cAstNode *node)
     cAstNode::iterator it;
     for (it=node->FirstChild(); it!=node->LastChild(); it++)
     {
-        if ((*it) != nullptr) 
-        {
-            (*it)->Visit(this);
-            // if children have errors, promote them to the parent
-            if ( (*it)->HasError()) node->SetHasError();
-        }
+        if ((*it) != nullptr) (*it)->Visit(this);
     }
 }
 
@@ -59,7 +42,7 @@ void cVisitor::Visit(cOpNode *node)           { VisitAllChildren(node); }
 void cVisitor::Visit(cParamListNode *node)    { VisitAllChildren(node); }
 void cVisitor::Visit(cParamsNode *node)       { VisitAllChildren(node); }
 void cVisitor::Visit(cPrintNode *node)        { VisitAllChildren(node); }
-void cVisitor::Visit(cProgramNode *node)       { VisitAllChildren(node); }
+void cVisitor::Visit(cProgramNode *node)      { VisitAllChildren(node); }
 void cVisitor::Visit(cReturnNode *node)       { VisitAllChildren(node); }
 void cVisitor::Visit(cStmtNode *node)         { VisitAllChildren(node); }
 void cVisitor::Visit(cStmtsNode *node)        { VisitAllChildren(node); }

@@ -15,7 +15,6 @@
 #include "cSymbolTable.h"
 #include "cBaseTypeNode.h"
 
-// Add symbols for base types
 void cSymbolTable::InitRootTable()
 {
     cSymbol *type;

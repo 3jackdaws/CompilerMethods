@@ -1,15 +1,4 @@
 #pragma once
-//**************************************
-// cReturnNode.h
-//
-// Defines AST node for a lang return statement
-//
-// Author: Phil Howard 
-// phil.howard@oit.edu
-//
-// Date: Feb. 18, 2017
-//
-
 
 #include "cAstNode.h"
 #include "cStmtNode.h"

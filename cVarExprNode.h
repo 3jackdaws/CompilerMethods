@@ -67,14 +67,9 @@ class cVarExprNode : public cExprNode
 
             return name;
         }
-
-        // return the type of the VarExpr. This includes dereferencing arrays
         virtual cDeclNode *GetType() 
         { 
-            cDeclNode* decl = GetName()->GetDecl();
-            if (decl == nullptr) return nullptr;
-
-            cDeclNode* type = decl->GetType();
+            cDeclNode* type = GetName()->GetDecl()->GetType();
 
             if (type->IsArray())
             {
@@ -104,49 +99,46 @@ class cVarExprNode : public cExprNode
         {
              return (cExprNode*)GetChild(index + 1);
         }
-        
-        int GetSize()
-        {
-            return GetName()->GetDecl()->GetSize();
-        }
-        
-        int GetOffset()
-        {
-             return GetName()->GetDecl()->GetOffset();
-        }
-        
+
+        void SetSize(int size)      { m_size = size; }
+        void SetOffset(int offset)  { m_offset = offset; }
+        int GetSize()               { return m_size; }
+        int GetOffset()             { return m_offset; }
+
+        void AddRowSize(int size) { m_arrayRowSizes.push_back(size); }
+        int  GetRowSize(int index) { return m_arrayRowSizes[index]; }
+
         virtual string AttributesToString()
         {
-            int size = this->GetSize();
-            int offset = this->GetOffset();
-            string row_sizes_string = "";
-            
-            cDeclNode* decl = this->GetName()->GetDecl()->GetType();
-            int is_array = decl->IsArray();
-            if (is_array)
+            if (m_size != 0 || m_offset != 0)
             {
-                cDeclNode* base = decl->GetBaseType();
-                row_sizes_string = std::to_string(base->Sizeof());
-                
-                while (base->IsArray())
+                std::string result;
+                result = " size=\"" + std::to_string(m_size) + "\" offset=\"" +
+                    std::to_string(m_offset) + "\"";
+                if (m_arrayRowSizes.size() > 0)
                 {
-                    base = base->GetBaseType();
-                    row_sizes_string += " " + std::to_string(base->Sizeof());
+                    result += " rowsizes=\"";
+
+                    for (int ii : m_arrayRowSizes)
+                    {
+                        result += std::to_string(ii) + " ";
+                    }
+
+                    result.pop_back(); // remove trailing space
+                    result += "\"";
                 }
+                return result;
             }
-            
-            string result(" size=\"");
-            result += std::to_string(size) + "\"";
-            result += " offset=\"" + std::to_string(offset) + "\"";
-            
-            if (is_array)
+            else
             {
-                result += " rowsizes=\"" + row_sizes_string + "\"";
+                return "";
             }
-            
-            return result;
         }
 
         virtual string NodeType() { return string("varref"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
+    protected:
+        int m_size;
+        int m_offset;
+        vector<int> m_arrayRowSizes;
 };

@@ -34,26 +34,24 @@ class cParamListNode : public cAstNode
             return static_cast<cExprNode*>(GetChild(index));
         }
 
+        void SetSize(int size) { m_size = size; }
+        int GetSize() { return m_size; }
+
         virtual string NodeType() { return string("params"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
-        
-        int GetSize()
-        {
-            return m_size;
-        }
-        
-        void SetSize(int size)
-        {
-            m_size = size;
-        }
-        
+
         virtual string AttributesToString()
         {
-            string result(" size=\"");
-            result += std::to_string(this->m_size) + "\"";
-            return result;
+            if (m_size != 0)
+            {
+                return " size=\"" + std::to_string(m_size) + "\"";
+            }
+            else
+            {
+                return "";
+            }
         }
-        
     protected:
-        int m_size = 0;
+        int m_size;
+
 };

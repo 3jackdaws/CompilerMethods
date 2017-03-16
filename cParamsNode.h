@@ -19,7 +19,6 @@ class cParamsNode : public cDeclsNode
         // param is the first decl in this decls
         cParamsNode(cDeclNode *decl) : cDeclsNode(decl)
         {
-            // child is added in base constructor
         }
 
         // return the XML node name

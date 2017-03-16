@@ -60,7 +60,6 @@ class cArrayDeclNode : public cDeclNode
             m_count = size;
         }
 
-        // return the type of the elements
         virtual cDeclNode *GetBaseType()
         {
             cSymbol* type = static_cast<cSymbol*>(GetChild(0));
@@ -85,16 +84,13 @@ class cArrayDeclNode : public cDeclNode
             return static_cast<cSymbol*>(GetChild(1));
         }
 
+        int GetCount() { return m_count; }
+
         virtual string NodeType() { return string("array_decl"); }
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
         virtual string AttributesToString()
         {
             return " count=\"" + std::to_string(m_count) + "\"";
-        }
-        
-        virtual int Sizeof()
-        {
-            return m_count * GetBaseType()->Sizeof();
         }
     protected:
         int m_count;

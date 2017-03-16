@@ -1,23 +1,5 @@
-#pragma once
-//**************************************
-// cSemantic.h 
-//
-// Defines visitor class for semantic processing
-//
-// Author: Phil Howard 
-// phil.howard@oit.edu
-//
-// Date: Feb. 20, 2017
-//
-
 #include "cVisitor.h"
 #include "cSymbolTable.h"
-
-void FatalError(const char *msg)
-{
-    std::cerr << msg << std::endl;
-    exit(1);
-}
 
 class cSemantics : public cVisitor
 {
@@ -38,9 +20,14 @@ class cSemantics : public cVisitor
             " on line " << node->LineNumber() << "\n";
     }
 
+    void FatalError(const char *msg)
+    {
+        std::cerr << msg << std::endl;
+        exit(1);
+    }
+
     void VisitAllNodes(cAstNode *node) { node->Visit(this); }
 
-    //void Visit(cArrayRefNode *node)     { VisitAllChildren(node); }
     //void Visit(cAstNode *node)          { VisitAllChildren(node); }
 
     void Visit(cAssignNode *node)
@@ -63,16 +50,7 @@ class cSemantics : public cVisitor
         }
     }
 
-    void Visit(cBinaryExprNode *node)   
-    { 
-        VisitAllChildren(node); 
-
-        if (node->GetLeft()->HasError() || node->GetRight()->HasError()) 
-        {
-            node->SetHasError();
-        }
-    }
-
+    //void Visit(cBinaryExprNode *node)   { VisitAllChildren(node); }
     //void Visit(cBlockNode *node)        { VisitAllChildren(node); }
     //void Visit(cDeclNode *node)         { VisitAllChildren(node); }
     //void Visit(cDeclsNode *node)        { VisitAllChildren(node); }
@@ -81,18 +59,13 @@ class cSemantics : public cVisitor
     //void Visit(cFuncDeclNode *node)     { VisitAllChildren(node); }
     void Visit(cFuncExprNode *node)     
     { 
-        VisitAllChildren(node);
-        if (node->HasError()) return;
-
-        // defined?
         if (node->GetName()->GetDecl() == nullptr)
         {
-            SemanticError(node, "Function " + node->GetName()->GetName() +
+            SemanticError(node, node->GetName()->GetName() +
                     " is not declared");
             return;
         }
 
-        // defined as a function?
         if (!node->GetName()->GetDecl()->IsFunc())
         {
             SemanticError(node, node->GetName()->GetName() +
@@ -100,7 +73,6 @@ class cSemantics : public cVisitor
             return;
         }
 
-        // definition has a body?
         cFuncDeclNode *decl = dynamic_cast<cFuncDeclNode*>
             (node->GetName()->GetDecl());
         if (decl == nullptr || !decl->IsFullyDefined())
@@ -109,7 +81,6 @@ class cSemantics : public cVisitor
                     " is not fully defined");
         }
 
-        // check for compatible params
         cParamListNode* args = node->GetParams();
         cDeclsNode*  formals = decl->GetParams();
 
@@ -140,6 +111,8 @@ class cSemantics : public cVisitor
                 }
             }
         }
+
+        VisitAllChildren(node); 
     }
 
     //void Visit(cIfNode *node)           { VisitAllChildren(node); }
@@ -159,7 +132,6 @@ class cSemantics : public cVisitor
         bool isStruct = false;
         bool isArray = false;
 
-        // declared?
         if (node->GetName()->GetDecl() == nullptr)
         {
             SemanticError(node, "Symbol " + node->GetName()->GetName() + 
@@ -167,9 +139,7 @@ class cSemantics : public cVisitor
         }
 
         VisitAllChildren(node); 
-        if (node->HasError()) return;
 
-        // check for valid indexing
         for (int ii=0; ii<node->NumItems(); ii++)
         {
             if (node->ItemIsIndex(ii))
@@ -182,7 +152,6 @@ class cSemantics : public cVisitor
                     return;
                 }
 
-                // is the base an array?
                 cDeclNode *itemDecl = node->GetName()->GetDecl()->GetType();
                 if (!itemDecl->GetType(ii)->IsArray())
                 {
@@ -191,11 +160,11 @@ class cSemantics : public cVisitor
                     return;
                 }
 
-                // is the index an int?
-                if (!node->GetIndex(ii)->GetType()->IsIntegral())
+                if (!node->GetIndex(ii)->GetType()->IsInt() &&
+                    !node->GetIndex(ii)->GetType()->IsChar())
                 {
                     SemanticError(node, "Index of " + node->GetTextName() +
-                            " is not an int");
+                            "is not an int");
                     return;
                 }
             }

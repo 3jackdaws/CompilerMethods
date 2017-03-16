@@ -47,7 +47,7 @@ class cBaseTypeNode : public cDeclNode
         }
 
         // return size of data item
-        virtual int Sizeof() { return m_size; }
+        virtual int GetSize() { return m_size; }
 
         virtual void Visit(cVisitor *visitor) { visitor->Visit(this); }
     protected:
